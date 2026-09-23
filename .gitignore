@@ -1,0 +1,12 @@
+.cache/
+models/
+data/
+outputs/
+wandb/
+*.bin
+*.safetensors
+*.pt
+*.ckpt
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

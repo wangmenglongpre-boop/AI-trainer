@@ -1,0 +1,586 @@
+<title>RTX 4090 单卡模型学习与实战计划（v4 · 2026 课程对照与操作手册）</title>
+<h1>RTX 4090 学习路线：8 周基础主线与进阶实验</h1>
+<p>适用对象：非计算机科班工科背景，初步掌握 Python，熟练使用 AI 工具，希望深入理解模型原理并完成实战。沿用已确认的偏好：HuggingFace 直连、单张 RTX 4090、以原理理解为先。修订日期：2026-09-23。</p>
+<callout emoji="🎯" background-color="light-blue"><p><b>目标是建立可验证的模型学习能力。</b>8 周第一轮完成“反向传播 → 语言模型 → Transformer → SFT → RLVR 最小实验 → Agent 评测”。掌握标准是能解释公式、独立补写关键代码、用实验辨别效果。此路线不承诺复现完整 DeepSeek-R1、MiMo 或实现 AGI。</p></callout>
+<p><b>阅读方式：</b>第 1–10 节是学习路线与验收要求；第 11–17 节是本次新增的操作手册，按“环境 → 模型/数据 → 基础与预训练 → SFT → GRPO → Agent → 进阶”执行。具体模型、数据数量和参数以操作手册为准。保留本地文件名 learning-plan-v3.xml 以免打断已有引用，文档内容版本已更新为 v4。</p>
+<h1>1. 时间预算与学习边界</h1>
+<p>下面按每周约 18–22 小时主动学习设计，总计约 144–176 小时；GPU 无人值守运行时间另计。这是排期假设，尚未确认你的实际可用时间。对于目前基础，8 周适合作为第一轮；若要扎实完成全部推导、消融和独立实现，建议预留 12–16 周。每周只有 8–10 小时时，可把每个学习周拆成两个自然周。</p>
+<p>每周建议：课程与笔记 5 小时，独立编码 8 小时，实验与排错 5 小时，口头复述与报告 2 小时。每次看课 20–40 分钟就暂停复现；两小时视频通常需要多次学习，不能把视频时长当作掌握时间。没有通过当周验收时，顺延进阶任务。</p>
+<p>这是一条以语言模型为中心的路线。线性模型、概率、优化和泛化会随实验补齐；树模型、SVM、CNN、图网络、VAE、扩散不是这 8 周的完整学习目标，可在第二轮按兴趣扩展。</p>
+<h1>2. 课程来源与准确的对应关系</h1>
+<h2>2.1 Karpathy：作为核心代码课程</h2>
+<p>主入口：<a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero 官方目录</a>。官方先修要求包含较扎实的 Python 编程和入门数学；GPT 一讲明确建议先完成 makemore，熟悉语言模型、张量和 PyTorch。</p>
+<table><thead><tr><th><p>学习位置</p></th><th><p>官方课程 / 项目</p></th><th><p>完成深度</p></th></tr></thead><tbody>
+<tr><td><p>第 1 周</p></td><td><p>Building micrograd（约 2h25m）；<a href="https://github.com/karpathy/micrograd">micrograd</a></p></td><td><p>手写标量计算图与链式法则；理解梯度累加。</p></td></tr>
+<tr><td><p>第 2 周</p></td><td><p>Building makemore（约 1h57m）；Part 2: MLP（约 1h15m）；Part 3: Activations &amp; Gradients, BatchNorm（约 1h55m）；<a href="https://github.com/karpathy/makemore">makemore</a></p></td><td><p>前两讲跟写；第三讲重点做初始化、激活和梯度诊断。</p></td></tr>
+<tr><td><p>第 3 周</p></td><td><p>Let's build GPT（约 1h56m）；<a href="https://github.com/karpathy/ng-video-lecture">配套代码</a></p></td><td><p>先看全局，再逐模块独立实现和解释形状。</p></td></tr>
+<tr><td><p>第 4 周</p></td><td><p>Let's build the GPT Tokenizer（约 2h13m）；<a href="https://github.com/karpathy/minbpe">minbpe</a></p></td><td><p>手写玩具 BPE；实际语料用成熟实现训练小词表。</p></td></tr>
+<tr><td><p>进阶补充</p></td><td><p>makemore Part 4: Becoming a Backprop Ninja；Part 5: WaveNet；<a href="https://github.com/karpathy/build-nanogpt">build-nanogpt</a></p></td><td><p>手推张量梯度、了解卷积序列模型、阅读 GPT-2 训练工程；不要求第一轮全部完成。</p></td></tr>
+</tbody></table>
+<p>可选的串联阅读：Karpathy 的 <a href="https://karpathy.github.io/2026/02/12/microgpt/">microgpt（2026-02-12）</a>，用纯 Python 展示训练到生成的完整链路。建议第 3–4 周用它复述全局，不以其运行效率作为 GPU 工程基准。</p>
+<h2>2.2 唐杰 2026《高级机器学习》：按报道中的作业要求做单卡改编</h2>
+<p>本版采用你提供的 <a href="https://www.oschina.net/news/502554">OSCHINA 报道：智谱创始人唐杰清华开课（2026-09-17）</a>。正文提到 16 周课程的实践要求：从零写 Tokenizer 和 Transformer、端到端训练 0.1B 模型；手写 Triton attention kernel 并测试多卡训练/推理增益；从原始 dump 清洗语料并拟合 scaling law；同基座比较 SFT、DPO、RLVR；搭可验证环境与 harness，训练长程 Agent，并鼓励 self-judge loop。</p>
+<p>来源性质：这是媒体报道，正文引用上课学生的描述；文章顶部另有 AI 摘要，本版依据正文。它不是完整 syllabus 或逐讲视频，因此不能据此编造第几讲讲什么。下面保留研究问题和实验方法，但按你的 Python 基础、单卡 4090 与原理优先目标降低第一轮规模。无需再确认课程年份。</p>
+<table><thead><tr><th><p>对应主题</p></th><th><p>单卡学习实验</p></th><th><p>第一轮取舍</p></th></tr></thead><tbody>
+<tr><td><p>从零 Tokenizer / Transformer、0.1B 训练</p></td><td><p>先字符 GPT，再 BPE + 约 14M；约 92M 的 0.1B 级别配置见第 17 节</p></td><td><p>前四周必做 14M；0.1B 不是硬件绝对做不了，而是训练预算与学习负担后置。</p></td></tr>
+<tr><td><p>Triton attention、多卡增益</p></td><td><p>先手写 attention 与 SDPA 的正确性、耗时、显存对照</p></td><td><p>Triton 放第 9–10 周；单卡不能实测多卡增益，只做原理与公开数据分析。</p></td></tr>
+<tr><td><p>原始 dump 清洗、scaling law 外推</p></td><td><p>TinyStories 做最小清洗闭环；进阶增加 FineWeb-Edu 小样本与局部规模实验</p></td><td><p>明确加工过的数据集不是完整 raw dump 复现；外推结论限定在小实验范围内。</p></td></tr>
+<tr><td><p>同基座 SFT / DPO / RLVR 对照</p></td><td><p>第 5–6 周代码 SFT、第 7 周数学 RL 入门；第 11–12 周同一数学 checkpoint 分三支</p></td><td><p>不同任务的入门实验不冒充同基座对照；完整数据构造与预算见第 17 节。</p></td></tr>
+<tr><td><p>可验证环境、长程 Agent、self-judge</p></td><td><p>第 8 周最多 3 次代码修复；进阶多文件任务、轨迹训练和 self-judge 消融</p></td><td><p>先保证可信判分，再增加任务长度；模型自评不能取代外部测试。</p></td></tr>
+</tbody></table>
+<h1>3. 必须修正的旧版判断</h1>
+<ol>
+<li><b>时间与指标不能保证。</b>撤回“15 分钟 loss 低于 1.8”“2 小时准确率明显提升”“生成变长就是自我反思”的验收口径。Loss 受 tokenizer、语料、目标掩码影响；生成变长也可能是重复或截断。训练奖励上升不能替代独立测试正确率。</li>
+<li><b>vLLM 是加速选择。</b>小模型、短回答的 GRPO 可先用 Transformers 生成跑通。96% 是特定实现的报告，不是所有 RL 训练的固定比例。确认瓶颈后再引入 vLLM；原生 TRL 与 Unsloth 的接法分开按对应版本配置。</li>
+<li><b>参数量需要计算。</b>旧版 8192 词表、384 隐藏维度、6 层、512 上下文且共享输出权重的实现约 14M，并非 30M；原始 50257 词表且不共享输出权重的模型约 49.6M。以 sum(p.numel() for p in model.parameters()) 为准。</li>
+<li><b>LayerNorm 的问题要准确描述。</b>F.layer_norm 不传 weight/bias 是合法的无仿射归一化，不是必然报错或必然不收敛。学习标准 GPT 风格结构时，采用每层独立的 nn.LayerNorm；旧版最终 ln_f 实际被调用，不能说所有已定义 LayerNorm 都没调用。</li>
+<li><b>脚本不等于已验证的运行产物。</b>此前 SFT/GRPO 示例未锁定相容依赖，也未在你的 4090 上测试，不应标为“可直接运行”。GRPO 缺 prompt 字段、GSM8K 原始答案未抽取会破坏输入与奖励链路；batch 与生成组约束依赖具体 TRL 版本，不能用一个跨版本公式概括。</li>
+<li><b>自我纠错不等于参数自我学习。</b>把报错放回上下文属于推理时反馈；只有收集轨迹并显式执行训练更新，模型参数才改变。数学 RL 模型的表现不能用来证明代码 Agent 的能力提升。</li>
+<li><b>旧 Docker 示例仍有缺陷。</b>宿主 subprocess 超时终止 Docker CLI 不保证容器退出；必须记录容器 ID 并在 finally 中强制清理。临时目录默认权限可能使 nobody 无法读取；需要预检挂载权限。退出码为 0 只代表运行成功，可信断言通过才代表任务完成。</li>
+</ol>
+<h1>4. 第 1–4 周：建立原理与实现能力</h1>
+<h2>第 1 周：Python、必要数学与反向传播（18–22 小时）</h2>
+<p><b>本周问题：</b>模型中的一个参数如何知道该增大还是减小？</p>
+<p>第 1 天：检查函数、类、列表/字典、文件、异常、虚拟环境；能读懂报错栈。用 NumPy 或 PyTorch 完成矩阵乘法、索引、广播、reshape，并写出输入输出形状。第 2 天：复习导数、偏导、链式法则、均值和方差。第 3–4 天：跟学 micrograd，手写 Value 的加法、乘法、拓扑排序、梯度累加与 backward。第 5 天：用线性回归拟合简单工程数据，比较手算梯度、数值差分和 autograd。周末整理笔记并复述一次参数更新。</p>
+<p><b>必懂公式：</b>线性预测 ŷ = wx + b；均方误差；θ ← θ − η∇L。重点是每个符号对应哪个数组、哪行代码，而不是一次补完数学教材。</p>
+<p><b>验收：</b>在非饱和的简单表达式上用中心差分核对梯度，并说明误差与步长的关系；能解释同一变量在图中重复使用时为何要累加梯度；能解释学习率过大时 loss 发散。产物：micrograd 练习、线性回归笔记、一次梯度对照记录。</p>
+<h2>第 2 周：从 Bigram 到 MLP，理解语言模型（18–22 小时）</h2>
+<p><b>本周问题：</b>预测下一个字符，为什么可以训练出能生成文本的模型？</p>
+<p>跟做 makemore 与 MLP。先用字符频数估计条件概率，再用神经网络建模；用同一套字符词表和数据划分比较。补充概率分布、条件概率、softmax、负对数似然、交叉熵和极大似然。把 embedding 解释为可学习的查表矩阵，区分离散 token ID 与连续向量。</p>
+<p><b>实验：</b>先划分 train/dev/test；仅用 dev 选学习率和模型宽度。故意设置过大学习率、糟糕初始化、极小训练集，观察 loss、激活和梯度统计。比较 SGD 与 Adam 的训练曲线。温度采样改变输出多样性时，保持模型权重不变。</p>
+<p><b>验收：</b>独立实现 minibatch 训练和采样循环；在几条样本上明显降低训练 loss，作为排错检查；解释过拟合为何会出现；记录 Bigram 和 MLP 的 dev NLL 及样例，不要求预设的改善幅度。产物：语言模型 notebook、数据划分清单、两种模型的对照。</p>
+<h2>第 3 周：手写 Attention 与小型 GPT（18–22 小时）</h2>
+<p><b>本周问题：</b>模型怎样根据不同输入选择需要关注的上下文？</p>
+<p>按顺序实现单头 attention、causal mask、多头、输出投影、FFN、残差和 pre-norm。跟学 Let's build GPT。第一版继续用字符 tokenizer，先降低并行学习任务的数量。掌握 logits、teacher forcing、next-token shift、EOS 和采样。</p>
+<p><b>形状推导：</b>X 为 B×T×C；Q/K/V 拆头后为 B×H×T×Dh；QKᵀ 为 B×H×T×T；softmax 沿 key 轴；乘 V 后合并回 B×T×C。说明除以 √Dh 的作用，理解显式注意力矩阵随 T² 增长。</p>
+<p><b>必须验证：</b>在 eval 模式下仅修改后缀 token，前缀位置 logits 应在数值容差内不变；确认输入 tokens[:, :-1] 与目标 tokens[:, 1:] 对齐；小批样本能过拟合；保存后重载的 logits 一致。将手写 attention 与 PyTorch SDPA 在相同输入、无 dropout 条件下比较。</p>
+<p><b>验收：</b>独立画出一次前向与反向的数据流，说明 mask 防止的信息泄漏；训练和生成使用同一模型。产物：模块实现、形状表、因果性检查记录与 checkpoint。</p>
+<h2>第 4 周：Tokenizer、TinyStories 与可复现预训练（18–22 小时）</h2>
+<p><b>本周问题：</b>效果究竟来自架构、数据还是训练预算？</p>
+<p>跟学 GPT Tokenizer，手写小语料 BPE，核对英文、中文、空格与 Unicode 的编码解码。实际 TinyStories 实验用成熟 tokenizer 实现；若自训 8k 词表，只用训练语料拟合，之后冻结。训练/验证按故事划分后再切 token，检查跨集合重复；增加故事边界 EOS。</p>
+<p><b>参考规模：</b>词表 8192、隐藏维度 384、6 头、6 层、上下文 512、共享 embedding/head，约 14M 参数。先跑 1M token 排错，再以 10M–30M token 为初始实验预算；这些是预算而非质量承诺。时间按热身后的 tokens/s 估算并预留评测、保存开销。</p>
+<p><b>实验选择：</b>固定 tokenizer 和 token 预算，比较两种学习率；或固定模型比较清洗前后数据，二选一。每个实验一次只改一个关键因素。不同 tokenizer 的 per-token loss 不直接横向比较；跨 tokenizer 对照可用一致定义的每字节负对数似然等指标。</p>
+<p><b>验收：</b>保存训练/验证 loss、token 数、吞吐、峰值显存、固定 prompts 的生成；checkpoint 可恢复训练。检查 tied embedding 的初始化尺度，避免默认初始化导致初始 logits 过大。产物：数据说明、配置、一次受控实验和 1–2 页报告。没有达到“好故事”也可验收，但须分析证据与下一步。</p>
+<h1>5. 第 5–6 周：理解并评估微调</h1>
+<h2>第 5 周：预训练模型、LoRA 与训练数据（18–22 小时）</h2>
+<p><b>本周问题：</b>冻结大部分参数后，为什么仍能改变模型的任务行为？</p>
+<p>先区分 base 与 instruct；了解 LayerNorm/RMSNorm、位置编码/RoPE、GELU/SwiGLU 的对应关系，第一轮不必把自写 GPT 改成完整 Qwen。阅读 LoRA 与 QLoRA：W′ = W + (α/r)BA；明确 A、B 的形状、可训练参数比例、冻结基座的梯度状态，以及量化误差与激活显存。</p>
+<p><b>主线模型：</b>代码方向明确采用 Qwen/Qwen2.5-Coder-1.5B-Instruct，数学方向另用 Qwen/Qwen2.5-1.5B-Instruct。第一轮固定型号；不把它们称为最新最优，只作为可解释的教学对象。代码任务是“Python 简单函数修复”，第 8 周复用代码 SFT adapter；不把数学 RL adapter 挂到代码基座。</p>
+<p><b>数据策略：</b>从 MBPP sanitized 的训练题构造 30 条人工核验的修复样例，再扩为约 300–480 条（实际数量取决于有效变异）。沿用官方 train/validation/test，所有变异跟随原 task_id；测试题及其变体不进训练。完整字段、构造方法与过滤步骤见第 12、14 节。</p>
+<p><b>验收：</b>打印真实 chat template 渲染结果与 token IDs；确认 BOS/EOS 不重复、回答没有被截断；区分 attention mask 与 loss mask；核对 assistant-only loss 中提示部分 label 为 -100、回答部分有效。不要假设每个模板自动支持 assistant mask。产物：数据卡、划分 manifest、模板和标签检查、微调前基线。</p>
+<h2>第 6 周：SFT、验证与推理（18–22 小时）</h2>
+<p><b>本周问题：</b>训练 loss 下降，是否真的解决了你的目标任务？</p>
+<p>先对 16–32 个样例做短程训练，确认梯度、loss 和保存/加载无误；随后在 train 上正式训练，用 dev 选择 checkpoint。训练时保留“max_steps 控制预算”或“epoch 控制遍历次数”之一作为明确主设置；3 epoch 不是固定最佳值。训练数据过滤、长度分布和有效回答 token 数纳入记录。</p>
+<p><b>对照：</b>A 原始 instruct + 固定 prompt；B 原始 instruct + 固定 few-shot；C 同一原始 checkpoint + SFT。三者用相同测试题、解码与回答 token 上限。主要指标为可信测试通过率，同时记录有效格式率、延迟、输出长度与通用任务退化。测试集只用于最终比较，不反复调参。</p>
+<p><b>推理知识：</b>理解 prefill/decode、KV cache、temperature/top-p、最大输出长度和上下文限制。LoRA 保存目录通常不是独立完整模型；恢复时核对基座 ID/revision、量化配置、adapter 加载、tokenizer 和 chat template。合并 adapter 是另一种部署方式，应单独验证。</p>
+<p><b>验收：</b>冷启动后能恢复微调行为，报告改善、退化和失败类型；没有提升时能分辨数据、评测、训练或模型容量问题。产物：adapter、依赖记录、A/B/C 对照表、10 个失败案例解释。保留未训练基线，供第 8 周比较。</p>
+<h1>6. 第 7–8 周：理解反馈如何作用于模型与系统</h1>
+<h2>第 7 周：从策略梯度到 GRPO 的最小实验（18–22 小时）</h2>
+<p><b>本周问题：</b>只知道答案好坏，怎样让更好的输出出现得更频繁？</p>
+<p>先用多臂老虎机或极小离散策略学习期望奖励与 REINFORCE，再读 PPO 的 ratio、clipping、baseline 与 KL。接着手算 GRPO：对同一题生成 G 个候选，用组内奖励计算优势。标准化形式为 Aᵢ = (rᵢ − mean(r))/(std(r) + ε)；明确标准差约定。全组同分时该组的相对奖励优势为零，KL 等额外项需另看。省去 critic 会降低一部分开销，但 rollout、KV cache、梯度与优化器仍消耗显存。</p>
+<p><b>DPO 桥梁：</b>用一组 chosen/rejected 回答算出“相对 reference 的偏好概率差”，理解它使用离线偏好对，GRPO 则在线采样并依赖奖励。第一轮只做公式到玩具张量的对应；完整 DPO 训练不与 GRPO 同周强行安排。</p>
+<p><b>实战：</b>固定 Qwen/Qwen2.5-1.5B-Instruct，先记录基线；用受控整数算术排查 verifier，再用 GSM8K train 中独立划出的 1000 题做短程 GRPO。先观察采样组有无正确/错误混合；全错时先排查任务难度、prompt 和 verifier，必要时降低难度或增加明确记录的 SFT warm start。这样做不应声称是纯 R1-Zero 复现。完整脚本与数据划分见第 15 节。</p>
+<p><b>奖励先验收：</b>GSM8K 从 #### 后抽取目标答案；准备 prompt 字段，依据实际数据格式解析 completion。对 72、72.0、千位逗号、负数、缺答案、多答案构造用例；若限定整数答案，超出范围应明确拒判，而非用脆弱正则假装支持所有数学式。严禁执行任意模型字符串来“算答案”。正确性奖励为主；格式奖励单独记录，不能将 &lt;think&gt; 标签视为正确推理证据。base checkpoint 不一定具有 chat template，需验证或采用显式纯文本 prompt。</p>
+<p><b>工程路线：</b>先用 TRL + PEFT 与 Transformers 生成跑通短实验；G 可从 4 开始，输出上限 256–512 token，监测截断。根据所锁版本检查 generation batch、microbatch 与组大小约束，先构造 Trainer 并完成一个更新步，再扩大。若加 vLLM，单卡采用相应版本支持的同卡方案；不能把默认 server 模式直接当成同卡模式，也不混用不同教程的配置。</p>
+<p><b>验收：</b>能手算一组优势并解释更新方向；verifier 用例通过；完成“生成 → 奖励 → 更新 → 重载 → 独立评估”最小链路。记录正确率、格式率、组内奖励方差、零优势组比例、输出长度、截断率与 KL（启用时）。效果无提升也须如实报告。不得用输出更长、训练 reward 更高或看似会反思作为泛化提升证据。</p>
+<h2>第 8 周：代码 Agent 与统一评测（18–22 小时）</h2>
+<p><b>本周问题：</b>表现提升来自模型参数、更多尝试次数，还是有价值的环境反馈？</p>
+<p>复用第 6 周代码任务模型及原始基线，做“输出代码 → 隔离执行 → 返回受控错误摘要 → 最多 3 次尝试”。不要求先完成数学 GRPO 才能做 Agent。可信测试由你预先维护，模型不可修改；测试集合包含正常、边界、错误输入与结果语义。退出码为 0 仍需检查断言。</p>
+<p><b>四组比较：</b>A 原始模型单次作答；B SFT 模型单次作答；C SFT 模型独立重试至多 3 次；D SFT 模型获得错误反馈后至多尝试 3 次。C/D 采用相同总调用次数与累计输出 token 预算，避免把更多计算误当反馈收益。独立保留隐藏测试用于最终评分；允许反馈的公开测试与隐藏测试区分。</p>
+<p><b>Docker 执行要求：</b>预拉取并固定镜像；禁网、非 root、只读根目录、仅挂载临时代码目录、不传宿主密钥或 Docker socket；设置 CPU、内存、进程和输出大小上限，移除 capabilities 并启用 no-new-privileges。确认非 root 可读权限。每次记录容器名/ID，超时或异常时在 finally 强制停止和删除，验证无遗留进程。容器是隔离措施，不承诺抵御所有内核级攻击。</p>
+<p><b>验收：</b>至少 20 道开发任务用于调试，另留约 50 道独立任务做结题探索评估；报告各组通过数量/总数、首次成功率、预算内成功率、全部任务的平均尝试次数、超时率和开销。小样本结果只作初步证据。产物：完整轨迹、失败分类、预算一致的对照和 3–5 页结题报告。明确本周是推理闭环，没有在线更新模型参数。</p>
+<h1>7. 4090 的实验配置与排错顺序</h1>
+<p>4090 24GB 足以支持本路线的小模型训练与参数高效微调。以下仅是保守起点，不是已测量的显存或速度承诺。CPU、内存、磁盘和驱动尚未核实；开始前记录这些条件及可用显存。</p>
+<table><thead><tr><th><p>阶段</p></th><th><p>初始设置</p></th><th><p>遇到限制时</p></th></tr></thead><tbody>
+<tr><td><p>基础与手写 GPT</p></td><td><p>先 CPU 小张量；约 14M GPT，T=256–512，microbatch 先小后增</p></td><td><p>先保正确性；再用 bf16、SDPA 提效。</p></td></tr>
+<tr><td><p>SFT</p></td><td><p>1.5B，LoRA 或 4-bit QLoRA，T=512–1024，microbatch=1，r=8/16</p></td><td><p>按实际长度分布调整；gradient checkpointing；用累积维持所需更新 batch。</p></td></tr>
+<tr><td><p>GRPO</p></td><td><p>1.5B + PEFT；G=4，短回答，小规模试跑</p></td><td><p>先减回答长度或并发；检查组约束；量化、vLLM 后置。</p></td></tr>
+<tr><td><p>Agent</p></td><td><p>单个基座 + adapter 推理；容器执行普通 Python</p></td><td><p>限制历史与总 token，控制重试，及时卸载其他训练进程。</p></td></tr>
+</tbody></table>
+<p>显存由权重、梯度、优化器状态、激活、KV cache 和运行时缓存共同构成。4-bit 权重不意味着总显存就是参数量的一半字节；gradient accumulation 也不会自动降低每个 microbatch 的峰值。报告 torch 的 peak allocated / reserved 与 nvidia-smi 观测值，注明统计口径。</p>
+<p>环境分为基础 PyTorch、SFT、RL 三个独立环境。先验证驱动与 PyTorch 自带 CUDA runtime 的兼容性，不把手工安装全套 CUDA Toolkit、FlashAttention-2、Triton 作为入门门槛。锁定 Python、torch、transformers、datasets、peft、trl，以及实际使用的 bitsandbytes/unsloth/vllm 版本与模型 revision；一次成功验证后再保存依赖清单。依赖列表本身不能保证二进制相容。</p>
+<p>排错顺序：数据与标签 → 最小批次是否能学 → 梯度和初始化 → 评测实现 → 显存/速度 → 超参数。OOM 时先定位发生在加载、前向、反向还是生成，不盲目同时改多个配置。</p>
+<h1>8. 统一实验与学习验收规范</h1>
+<h2>8.1 每次实验保存这些证据</h2>
+<p>问题与假设；唯一主要变量；模型/代码/数据版本；split 与 seed；训练 token 或样本数；优化配置；完整评测配置；设备与依赖；耗时与峰值显存；结果、失败例与局限。用 wandb 记录曲线，可先用离线模式并保留本地 JSON/CSV；单次 seed 不代表统计稳健性。</p>
+<p>准确率同时写“通过数 / 总数”和百分比，例如 60/100 → 66/100 是增加 6 个百分点，相对增加 10%。正式声称改善时，在同一批题上做配对比较；必要时重复训练种子、报告配对 bootstrap 区间。50 题适合快速排错，不能证明稳定的小幅提升。最终测试结果不反向用于继续挑超参数。</p>
+<h2>8.2 善用 AI，但保留你的理解证据</h2>
+<ol>
+<li>写核心模块前，先用中文描述算法、输入输出与预期形状；让 AI 检查你的推导。</li>
+<li>独立实现一小段，再请 AI 解释报错和提出验证方法；学习练习中优先要提示，而非一次生成全部答案。</li>
+<li>每周关掉补全，独立补写一个关键函数；对它做一次输入、维度或假设变更，说明行为。</li>
+<li>每周录制 5–10 分钟复述：问题、公式、代码、曲线、失败和下一步。AI 的解释与引用也要核验。</li>
+</ol>
+<p>可采用轻量 SDD 记录：proposal 写实验问题，design 写算法与指标，tasks 写可执行练习，checklist 写证据。基础练习一份 notebook 足够，不让文档维护挤占编码。毕业实验再整理为完整报告。</p>
+<h2>8.3 学完后应该能回答</h2>
+<ul>
+<li>Token ID、embedding、logit 与概率分别是什么？</li>
+<li>交叉熵怎样对应 next-token prediction？为什么标签需要 shift？</li>
+<li>为什么 causal mask、残差、归一化和初始化会影响训练？</li>
+<li>LoRA 更新了哪些参数？量化省下的是哪部分显存？</li>
+<li>SFT、DPO、GRPO 的训练信号、数据来源与目标有什么不同？</li>
+<li>为什么奖励、答案长度和测试正确率会发生背离？</li>
+<li>Agent 的收益如何与额外计算预算区分？什么时候参数真的改变？</li>
+</ul>
+<h1>9. 深入理解版：追加 4–8 周的安排</h1>
+<p>若第一轮完成较快，按以下顺序展开；若基础周未通过验收，则优先用这段时间补齐，而不是继续叠加新模型。</p>
+<table><thead><tr><th><p>扩展</p></th><th><p>实验</p></th><th><p>研究习惯</p></th></tr></thead><tbody>
+<tr><td><p>1–2 周：张量反向与训练工程</p></td><td><p>Backprop Ninja；重写 softmax/交叉熵反向；比较手写 attention 与 SDPA 的误差、速度和显存；再阅读 build-nanogpt</p></td><td><p>先做数值正确性，再优化性能。</p></td></tr>
+<tr><td><p>1–2 周：同基座后训练对照</p></td><td><p>固定一个初始 checkpoint 与任务，分支比较继续 SFT、DPO、GRPO；报告各自数据、教师信号与计算预算</p></td><td><p>承认监督信息不同，不将简单名次解释为算法普遍优劣。</p></td></tr>
+<tr><td><p>1–2 周：数据与规模</p></td><td><p>同一 tokenizer 下训练几个小模型，比较 token 预算、数据质量与验证 NLL</p></td><td><p>仅做局部经验拟合；几组小实验不能可靠外推前沿模型的 scaling law。</p></td></tr>
+<tr><td><p>1–2 周：Agent 轨迹与训练</p></td><td><p>收集修复轨迹，按任务划分，做轨迹 SFT 并与原模型比较；或按已确认的课程作业开展可验证环境中的 RL</p></td><td><p>区分上下文反馈、数据回流与参数更新，防止测试轨迹泄漏。</p></td></tr>
+</tbody></table>
+<h1>10. 参考资料与待确认事项</h1>
+<p>必读材料按顺序使用，每周控制在主课程加 1 份补充材料，避免囤课。</p>
+<ul>
+<li><a href="https://karpathy.ai/zero-to-hero.html">Karpathy 官方课程目录</a>：第 1–4 周主教材；课程顺序与标题已核实。</li>
+<li><a href="https://zh.d2l.ai/">《动手学深度学习》</a>：按需补线性代数、自动微分、线性/softmax 回归、优化；不要求全书先修。</li>
+<li><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>：先看 attention 与模型结构，再回到实现。</li>
+<li><a href="https://arxiv.org/abs/2106.09685">LoRA</a>、<a href="https://arxiv.org/abs/2305.14314">QLoRA</a>：第 5 周重点读方法、显存假设与实验设置。</li>
+<li><a href="https://arxiv.org/abs/2305.18290">DPO</a>、<a href="https://arxiv.org/abs/2402.03300">DeepSeekMath（提出 GRPO）</a>、<a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a>：分清方法来源、完整训练配方与小规模教学实验。</li>
+<li><a href="https://huggingface.co/docs/trl/v0.17.0/sft_trainer">TRL 0.17.0 SFTTrainer</a>、<a href="https://huggingface.co/docs/trl/v0.17.0/grpo_trainer">TRL 0.17.0 GRPOTrainer</a>、<a href="https://huggingface.co/docs/peft/">PEFT</a>：操作手册选定一组历史版本作为教学起点，并按版本核对接口；不承诺适配任意最新包。</li>
+<li><a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a>：后续标准评测可选；第一轮的任务脚本必须先自己理解判分逻辑。</li>
+<li><a href="https://www.oschina.net/news/502554">2026 年课程报道（本版课程要求来源）</a>；<a href="https://keg.cs.tsinghua.edu.cn/jietang/">唐杰主页</a>仅作官方入口，不用旧年度项目页代替 2026 课程。</li>
+</ul>
+<p><b>排期假设：</b>每周实际投入仍未确认，暂按 18–22 小时安排。课程年份与报道来源已明确；将来拿到官方课件时可进一步对应讲次。第 11–17 节中的模型、数据、操作和代码已可用于准备实验，不需要等课件。</p>
+<p><b>验证范围：</b>本次交付是学习计划与实验设计，没有登录你的 GPU 服务器、下载训练权重或执行 GPU 训练。代码按注明版本核对接口，并做本地语法及可独立执行逻辑检查；完整环境安装、显存、速度、收敛和模型提升仍需在你的实例验收。标注“骨架”的代码含待接入组件，不是完整训练仓库。</p>
+<h1>11. 开机准备：镜像、目录与依赖</h1>
+<h2>11.1 镜像选择与平台边界</h2>
+<p>沿用此前选择的 12.4.1-py3.11-ubuntu22.04，配套下面的 PyTorch 2.6.0/cu124 教学环境。这是明确版本的历史基线，不是“2026 最新全家桶”。前文对 CUDA 13、Python 3.12 和所有新库兼容性的笼统否定撤回；是否支持应查具体版本。后续若转最新 Unsloth/vLLM，另建它们支持的环境，不强行维持 cu124。</p>
+<p><b>你提供的是 nvidia/cuda 系列容器镜像描述。</b>GPU 驱动通常由平台宿主机管理，CUDA 镜像不安装宿主内核驱动；不要在实例容器里执行 ubuntu-drivers autoinstall 或重启宿主。nvidia-smi 的 CUDA Version 是驱动支持上限，nvcc 是编译工具链版本，torch.version.cuda 是 PyTorch 构建所用 CUDA，三者不必完全相同。能运行还需满足宿主驱动兼容要求。</p>
+<p>先确认实例类型是容器还是虚拟机，以及持久卷挂载位置、停机/重建后的数据保留规则、收费规则。停机不一定免 GPU 费，磁盘通常仍计费。建议起点：8 vCPU、32GB 主存（64GB 更宽裕）、可用持久存储 200GB 起；这些是建议，不是已经核实的实例规格。</p>
+<p><b>第 5 周前就需要代码执行隔离。</b>托管 GPU 容器未必支持嵌套 Docker，apt install docker.io 不能保证可用。若平台不支持，模型仍在 GPU 实例推理，代码验证放在独立 CPU 虚拟机的 Docker 或平台提供的隔离执行服务上；没有隔离环境时暂停生成代码的执行，不回退到 GPU 宿主直接运行。</p>
+<h2>11.2 首日操作顺序</h2>
+<ol>
+<li>在平台终端执行 nvidia-smi、nvcc --version、python --version，记录 GPU 型号、显存、驱动与 Python。缺 GPU 或驱动错误时先让平台解决。</li>
+<li>确认持久盘实际路径。以下用 /data 举例，仅在它确实是可写持久盘时使用；否则替换为平台路径。</li>
+<li>建立独立环境，先只装基础依赖，执行 GPU 矩阵运算，再逐周安装后训练依赖。</li>
+<li>将课程 notebook、配置、数据划分与日志放持久盘；保存 checkpoint 后做一次进程重启与重载验证。</li>
+</ol>
+<pre lang="bash" caption="在 GPU 实例终端执行；/data 需替换为实际持久盘"><code>export LAB_ROOT=/data/agi-lab
+mkdir -p "$LAB_ROOT"/{data,models,outputs,reports,configs,scripts,notebooks}
+export HF_HOME="$LAB_ROOT/.cache/huggingface"
+export WANDB_MODE=offline
+cd "$LAB_ROOT"
+conda create -n agi-foundation python=3.11 -y
+conda activate agi-foundation
+python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
+python -m pip install numpy==1.26.4 datasets==3.5.0 tokenizers==0.21.1 \
+  matplotlib jupyterlab wandb
+python -m pip check</code></pre>
+<pre lang="python" caption="环境验收：env_check.py"><code>import torch
+assert torch.cuda.is_available(), "GPU 不可用，先检查平台分配与驱动"
+print("torch:", torch.__version__, "runtime:", torch.version.cuda)
+print("GPU:", torch.cuda.get_device_name(0))
+print("VRAM GiB:", torch.cuda.get_device_properties(0).total_memory / 2**30)
+assert torch.cuda.is_bf16_supported(), "本方案要求 bf16 支持"
+x = torch.randn(512, 512, device="cuda", dtype=torch.bfloat16)
+y = x @ x.T
+torch.cuda.synchronize()
+assert torch.isfinite(y).all()
+print("GPU matmul OK")</code></pre>
+<p>到第 5 周，再 conda create -n agi-post python=3.11 并激活；在其中装同一 torch 2.6.0/cu124，再装下面的接口基线。不要在已装入最新版 vLLM 的环境里覆盖 torch。</p>
+<pre lang="bash" caption="后训练环境：明确版本；安装后必须 pip check 与小样本验证"><code>python -m pip install transformers==4.51.3 trl==0.17.0 peft==0.15.2 \
+  accelerate==1.6.0 datasets==3.5.0 bitsandbytes==0.45.5 \
+  numpy==1.26.4 wandb
+python -m pip check
+python -m pip freeze &gt; reports/requirements-post.txt
+nvidia-smi &gt; reports/gpu-environment.txt</code></pre>
+<p>上述版本是为了让示例接口一致，不代表已经在平台完成集成测试。首次创建 Trainer、前向/反向、保存/重载都通过后，再将完整依赖记录作为本机锁定版本。基础阶段不需要 vLLM、Unsloth、DeepSpeed、外部 flash-attn。</p>
+<h1>12. 模型与数据清单：按阶段下载</h1>
+<table><thead><tr><th><p>阶段</p></th><th><p>模型 / 数据 ID</p></th><th><p>第一轮规模与划分</p></th></tr></thead><tbody>
+<tr><td><p>W1 自动微分</p></td><td><p>自己写 Value 与线性回归；合成 y = 3x + 2 + 噪声</p></td><td><p>200 个样本，160 train / 20 dev / 20 test；不下载大模型。</p></td></tr>
+<tr><td><p>W2 字符语言模型</p></td><td><p>karpathy/makemore 的 names.txt；Bigram + 小型 MLP</p></td><td><p>先去重，按完整名字固定 seed=42 做 80/10/10；字符词表和边界符固定。</p></td></tr>
+<tr><td><p>W3 字符 GPT</p></td><td><p>karpathy/char-rnn 的 data/tinyshakespeare/input.txt</p></td><td><p>字符 GPT：C=128，H=4，L=4，T=128；文本连续分块 90/5/5，各 split 内单独取窗口。</p></td></tr>
+<tr><td><p>W4 BPE GPT</p></td><td><p>roneneldan/TinyStories，text 字段；自己训练约 14M GPT</p></td><td><p>训练候选约 50,000 个故事；官方 validation 固定分 1,000 dev / 1,000 test；清洗后记实际数量。</p></td></tr>
+<tr><td><p>W5–6 SFT</p></td><td><p>Qwen/Qwen2.5-Coder-1.5B-Instruct；google-research-datasets/mbpp，sanitized 配置</p></td><td><p>官方 train=120、validation=43、test=257；train 变异为约 300–480 条修复样例，dev/test 原题不进训练。</p></td></tr>
+<tr><td><p>W7 RLVR</p></td><td><p>Qwen/Qwen2.5-1.5B-Instruct；openai/gsm8k，main 配置</p></td><td><p>官方 train=7473：固定抽 1000 train / 200 dev；test=1319，最终先固定抽 200 题评测。</p></td></tr>
+<tr><td><p>W8 Agent</p></td><td><p>代码原模型 + W6 adapter；MBPP 留出题的固定修复变体</p></td><td><p>validation 中约 20 题调试；test 中预选约 50 题作最终探索评估；数量随可验证变体保留率记录。</p></td></tr>
+</tbody></table>
+<p>MBPP 字段和 split 来自当前 <a href="https://huggingface.co/datasets/google-research-datasets/mbpp">数据卡</a>；旧教程可能显示所有题合并在 test，不可直接照搬。先 print(dataset) 和 column_names。记录仓库 revision、源 task_id 与处理后文件 hash。MBPP 是公开基准，预训练可能已见过；结论限定为本实验的适应效果，并补充你自己编写的工科小任务检验迁移。</p>
+<pre lang="python" caption="首次获取模型时记录确切 revision；后续读取 manifest，不再跟随 main"><code>import json
+from pathlib import Path
+from huggingface_hub import HfApi, snapshot_download
+
+repo = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+record = Path("reports/coder-model.json")
+record.parent.mkdir(parents=True, exist_ok=True)
+sha = (json.loads(record.read_text())["revision"] if record.exists()
+       else HfApi().model_info(repo).sha)
+local = snapshot_download(repo_id=repo, revision=sha,
+                          allow_patterns=["*.json", "*.safetensors", "*.txt", "*.model"])
+record.write_text(json.dumps({"repo": repo, "revision": sha, "path": local},
+                             indent=2), encoding="utf-8")
+print(local)</code></pre>
+<p>上述 snippet 在 W5 运行；数学模型到 W7 才下载，使用不同 manifest 文件名。SFT/GRPO 示例读取同一 MODEL_REV 环境变量来指定其对应模型的 revision；若未设置则跟随 main，只适合第一次排错，正式对照前必须固定。</p>
+<h1>13. W1–W4 操作手册：从数字到可训练 GPT</h1>
+<h2>13.1 W1–W2：每天做什么</h2>
+<ol>
+<li><b>W1 第 1–2 天：</b>创建 01_tensors.ipynb，完成矩阵乘法、广播、索引；生成 200 点线性数据，保存 seed 与划分。画散点图，手算一个样本对 w、b 的梯度。</li>
+<li><b>W1 第 3–4 天：</b>边看 micrograd 边写 Value；必须包含拓扑序、梯度累加和清零。用 f(x)=x*x+x 验证重复使用 x，检查 x=2 时 df/dx=5。</li>
+<li><b>W1 第 5 天：</b>分别用手算、micrograd、torch autograd 训练线性模型。比较学习率 0.01 与 1.0；解释哪个设置稳定与数据尺度的关系。</li>
+<li><b>W2 第 1–2 天：</b>下载 names.txt，去重划分；统计字符转移计数，加 1 平滑后归一化，用 NLL 评估 Bigram。边界符采用专用 ID，不让样本跨名字相连。</li>
+<li><b>W2 第 3–4 天：</b>MLP 取 context=3、embedding_dim=10、hidden=128，batch=32，Adam lr=1e-3；先 200 步，再最多 2000 步，每 100 步看 dev NLL。改变上下文长度需重新构造输入。</li>
+<li><b>W2 第 5 天：</b>固定 prompts、seed 和最多生成 20 个字符，比较 temperature=0.7/1.0；用同一 tokenizer 的 Bigram 与 MLP dev NLL 作对照。</li>
+</ol>
+<pre lang="bash" caption="下载两份小语料；实验首次运行后记录文件校验值"><code>mkdir -p data/raw
+curl -fL https://raw.githubusercontent.com/karpathy/makemore/master/names.txt \
+  -o data/raw/names.txt
+curl -fL https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt \
+  -o data/raw/tinyshakespeare.txt
+sha256sum data/raw/*.txt &gt; reports/raw-text-sha256.txt</code></pre>
+<h2>13.2 W3：关键模块代码与训练接线</h2>
+<p>第 1 天单头与 mask；第 2 天多头与残差；第 3 天组装 GPT 并用小批过拟合；第 4 天正常训练；第 5 天做因果性、SDPA 数值对照与重载检查。先使用字符配置，W4 再用默认 BPE 配置。下面是模型核心，可保存为 mini_gpt.py；数据加载、训练循环与生成函数是本周需要你补写的练习。</p>
+<pre lang="python" caption="mini_gpt.py：可独立导入的模型核心"><code>import torch
+from torch import nn
+from torch.nn import functional as F
+
+class Attention(nn.Module):
+    def __init__(self, width, heads):
+        super().__init__()
+        assert width % heads == 0
+        self.heads = heads
+        self.qkv = nn.Linear(width, 3 * width)
+        self.proj = nn.Linear(width, width)
+
+    def forward(self, x):
+        b, t, c = x.shape
+        q, k, v = self.qkv(x).chunk(3, dim=-1)
+        q, k, v = [z.reshape(b, t, self.heads, c // self.heads)
+                   .transpose(1, 2) for z in (q, k, v)]
+        score = q @ k.transpose(-2, -1) / (c // self.heads) ** 0.5
+        mask = torch.ones(t, t, device=x.device, dtype=torch.bool).tril()
+        score = score.masked_fill(~mask, float("-inf"))
+        weights = score.float().softmax(dim=-1).to(v.dtype)
+        out = (weights @ v).transpose(1, 2).contiguous().reshape(b, t, c)
+        return self.proj(out)
+
+class Block(nn.Module):
+    def __init__(self, width, heads):
+        super().__init__()
+        self.ln1, self.ln2 = nn.LayerNorm(width), nn.LayerNorm(width)
+        self.attn = Attention(width, heads)
+        self.ff = nn.Sequential(nn.Linear(width, 4 * width), nn.GELU(),
+                                nn.Linear(4 * width, width))
+
+    def forward(self, x):
+        x = x + self.attn(self.ln1(x))
+        return x + self.ff(self.ln2(x))
+
+class MiniGPT(nn.Module):
+    def __init__(self, vocab=8192, width=384, heads=6, layers=6, context=512):
+        super().__init__()
+        self.context = context
+        self.token = nn.Embedding(vocab, width)
+        self.pos = nn.Embedding(context, width)
+        self.blocks = nn.Sequential(*[Block(width, heads) for _ in range(layers)])
+        self.norm = nn.LayerNorm(width)
+        self.head = nn.Linear(width, vocab, bias=False)
+        self.apply(self._init)
+        self.head.weight = self.token.weight
+
+    @staticmethod
+    def _init(m):
+        if isinstance(m, (nn.Linear, nn.Embedding)):
+            nn.init.normal_(m.weight, std=0.02)
+            if isinstance(m, nn.Linear) and m.bias is not None:
+                nn.init.zeros_(m.bias)
+
+    def forward(self, ids, targets=None):
+        _, t = ids.shape
+        assert t &lt;= self.context
+        x = self.token(ids) + self.pos(torch.arange(t, device=ids.device))
+        logits = self.head(self.norm(self.blocks(x)))
+        loss = None if targets is None else F.cross_entropy(
+            logits.float().reshape(-1, logits.size(-1)), targets.reshape(-1))
+        return logits, loss</code></pre>
+<p><b>训练接线：</b>字符阶段将 ids 连续截取 T+1 个 token，x=window[:-1]、y=window[1:]；两个张量均为 long，形状 B×T。模型输出已对齐 y，自写模型不再内部 shift。HF 的 CausalLM 则接收与 input_ids 对齐的 labels 并在内部 shift，两种约定不要混用。</p>
+<p>起点：W3 batch=16、T=128、AdamW lr=3e-4、weight_decay=0.1、grad_clip=1.0，先 50 步排错、再 500–2000 步。每 100 步 model.eval() + no_grad() 评估固定 dev 窗口，结束后切回 train()。每个 optimizer step 前清零梯度；使用 bf16 autocast 时无需 fp16 GradScaler。生成每步只输入最近 context 个 token，并设置最大新 token 数。</p>
+<p><b>验收产物：</b>outputs/char-gpt/last.pt 保存模型、优化器、step、配置、tokenizer、随机数状态；reports/w03.md 记录 loss、参数量与检查结果。改变后缀而保持前缀不变的检查应在 eval 模式做；不得仅凭生成结果“看起来像英语”判断因果掩码正确。</p>
+<h2>13.3 W4：数据清洗、BPE 与预训练</h2>
+<ol>
+<li><b>下载与选择：</b>用 load_dataset("roneneldan/TinyStories", split="train", streaming=True)；以固定 seed 缓冲 shuffle 后取约 50,000 个候选故事。streaming 的 shuffle 不是全局均匀采样，报告采样方法；将选中内容固化为 JSONL。validation 独立取 2,000 故事，按固定 hash 分成 1,000 dev / 1,000 test。</li>
+<li><b>清洗：</b>统一换行和 Unicode NFC，去空；示例长度门槛 100–10,000 字符，记录每条过滤原因。按规范化文本 SHA256 精确去重；用词 5-gram Jaccard 对跨 split 的疑似近重复做抽样检查；发现重叠时移除 train 中副本。门槛是本实验设置，不声称最优。</li>
+<li><b>Tokenizer：</b>先用训练子集约 2,000 个故事手写玩具 BPE；正式词表用 tokenizers 的 ByteLevel BPE，在清洗后的 train 上训练 vocab_size=8192，保留 EOS、PAD。编码时不自动重复添加特殊符号，每篇故事末尾显式追加一次 EOS；保存 tokenizer.json。</li>
+<li><b>打包：</b>train/dev/test 分别编码并保存 token 流；窗口不能跨 split。训练流可将故事以 EOS 相连；EOS 不会自动阻止跨故事注意力，第一轮接受这种普通串联训练并写入配置。固定 dev 窗口用于可比评测。</li>
+<li><b>训练：</b>W3 的同一实现换成 C=384、H=6、L=6、T=512；batch=8、accum=4，有效 batch=32，每步 16,384 个目标 token。AdamW lr=3e-4、warmup=50 optimizer steps、之后余弦衰减，clip=1.0；先约 1M token 排错，再 10M token 对照（约 611 步），预算足够再 30M（约 1832 步）。</li>
+<li><b>只做一个消融：</b>同一 tokenizer、初始化 seed、token 预算，比较 lr=1e-4 与 3e-4；或同量原始/清洗语料，二选一。冻结 dev 评估方式，不用 test 选学习率。</li>
+</ol>
+<p><b>结果表：</b>run_id、数据 hash、实际参数量、已见 token、dev NLL、test NLL（最终一次）、tokens/s、显存峰值、固定提示生成。模型能否讲好故事依赖预算，不设“15 分钟”或固定 loss 保证。TinyStories 已是加工语料，不能称为完成了课程原始 dump 清洗作业。</p>
+<h1>14. W5–W6 操作手册：可验证的代码修复 QLoRA</h1>
+<h2>14.1 数据准备：避免只会生成漂亮 JSONL</h2>
+<p>从 google-research-datasets/mbpp 的 sanitized 配置开始。它比 full 小、字段更明确，适合你的第一轮。下载后核对 task_id、prompt、code、test_imports、test_list。参考答案先在隔离环境中执行已有测试，失败/语义不清的题排除并记录。训练题太少并不是问题，先保证数据和评测可信。</p>
+<ol>
+<li><b>W5 第 1 天：</b>取 train 中 10 道题，逐题理解输入、输出、边界条件。保留必要的函数签名与 imports。</li>
+<li><b>第 2 天：</b>为每题构造最多 3–4 个单点 bug，例如 &lt; 改 &lt;=、边界 range 改一位、空列表分支漏掉。只有参考代码通过、bug 代码至少失败一个可见测试的变体才保留；不要把无法运行的随机破坏充当所有训练样本。</li>
+<li><b>第 3 天：</b>把“任务描述 + 函数签名 + bug 代码 + 公开测试失败摘要”作为 user，完整修复代码作为 assistant；首先人工核验约 30 条，再扩到全部合格 train 题。所有变体继承 source_task_id 和原 split。</li>
+<li><b>第 4 天：</b>每道 dev/test 题预先固定一个 bug 变体。公开测试可用于反馈；另外人工添加边界/语义检查作隐藏测试，隐藏内容不进入 prompt、训练或纠错反馈。</li>
+<li><b>第 5 天：</b>先跑原始 Coder 模型的 dev 基线；预选最终 test 子集，冻结任务 ID、bug 版本、测试与 prompt。超出 1024 token 的训练样例先排除并计数，dev/test 不静默删除；需要延长上下文时所有对照统一配置。</li>
+</ol>
+<pre lang="json" caption="data/repair/train.jsonl 每行的字段示例；隐藏测试另存于评测端"><code>{"id":"custom-boundary-001-v1","source_task_id":"custom-boundary-001","split":"train","messages":[{"role":"system","content":"Fix the Python function. Return only complete Python code, without Markdown fences."},{"role":"user","content":"Return integers from 0 through n inclusive. n is nonnegative.\nBuggy code:\ndef through(n):\n    return list(range(n))\nPublic failure: assert through(2) == [0, 1, 2]"},{"role":"assistant","content":"def through(n):\n    return list(range(n + 1))"}]}</code></pre>
+<p>上面只展示字段设计；实际 JSON 必须用 json.dumps 生成，避免手工转义错误。自编题也要按来源家族分组。messages 固定为一段 prompt 对话加一个最终 assistant 回答，下面的脚本针对这种单轮修复数据。</p>
+<h2>14.2 SFT 训练核心：先检查 labels，再更新参数</h2>
+<p>下面保存为 sft_train.py；前提是已按上节准备 data/repair/train.jsonl 与 dev.jsonl，装好第 11 节后训练环境。第一轮使用原生 Transformers + PEFT + TRL 以看清数据与 loss；Unsloth 作为后续提速对照，不与此脚本混装配置。</p>
+<pre lang="python" caption="sft_train.py：限定 TRL 0.17.0 的教学训练入口"><code>import os
+import torch
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import LoraConfig, prepare_model_for_kbit_training
+from trl import SFTConfig, SFTTrainer
+
+MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+REV = os.environ.get("MODEL_REV", "main")
+MAXLEN = 1024
+tok = AutoTokenizer.from_pretrained(MODEL, revision=REV)
+tok.padding_side = "right"
+if tok.pad_token_id is None:
+    tok.pad_token = tok.eos_token
+raw = load_dataset("json", data_files={
+    "train": "data/repair/train.jsonl", "dev": "data/repair/dev.jsonl"})
+
+def render(row):
+    msgs = row["messages"]
+    assert msgs[-1]["role"] == "assistant"
+    prompt = tok.apply_chat_template(
+        msgs[:-1], tokenize=False, add_generation_prompt=True)
+    full = tok.apply_chat_template(
+        msgs, tokenize=False, add_generation_prompt=False)
+    assert full.startswith(prompt), "模板前缀不一致，暂停检查"
+    pids = tok(prompt, add_special_tokens=False)["input_ids"]
+    ids = tok(full, add_special_tokens=False)["input_ids"]
+    assert ids[:len(pids)] == pids, "token 边界不一致，暂停检查"
+    assert len(ids) &gt; len(pids), "空回答"
+    return {"prompt": prompt, "completion": full[len(prompt):],
+            "n_tokens": len(ids)}
+
+data = {}
+for split in raw:
+    rows = raw[split].map(render, remove_columns=raw[split].column_names)
+    too_long = sum(n &gt; MAXLEN for n in rows["n_tokens"])
+    print(split, "total:", len(rows), "too_long:", too_long)
+    assert too_long == 0, "请在数据准备阶段处理长度，不静默截断答案"
+    data[split] = rows.remove_columns("n_tokens")
+
+quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                          bnb_4bit_use_double_quant=True,
+                          bnb_4bit_compute_dtype=torch.bfloat16)
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL, revision=REV, quantization_config=quant,
+    torch_dtype=torch.bfloat16, device_map={"": 0},
+    attn_implementation="sdpa")
+model = prepare_model_for_kbit_training(
+    model, use_gradient_checkpointing=True,
+    gradient_checkpointing_kwargs={"use_reentrant": False})
+model.config.use_cache = False
+peft = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05,
+                  target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                                  "gate_proj", "up_proj", "down_proj"],
+                  bias="none", task_type="CAUSAL_LM")
+args = SFTConfig(
+    output_dir="outputs/code-sft", max_length=MAXLEN,
+    completion_only_loss=True, packing=False,
+    per_device_train_batch_size=1, gradient_accumulation_steps=8,
+    per_device_eval_batch_size=1, learning_rate=1e-4,
+    num_train_epochs=1, warmup_ratio=0.05, max_grad_norm=1.0,
+    bf16=True, gradient_checkpointing=True,
+    gradient_checkpointing_kwargs={"use_reentrant": False},
+    optim="adamw_torch", eval_strategy="steps", eval_steps=20,
+    save_steps=20, save_total_limit=2, logging_steps=5,
+    report_to="wandb", seed=42, data_seed=42)
+trainer = SFTTrainer(
+    model=model, args=args, processing_class=tok,
+    train_dataset=data["train"], eval_dataset=data["dev"],
+    peft_config=peft)
+batch = next(iter(trainer.get_train_dataloader()))
+labels = batch["labels"][0]
+assert (labels == -100).any() and (labels != -100).any()
+print("实际参与 loss 的文本:", tok.decode(batch["input_ids"][0][labels != -100]))
+# 此时人工核对：只有 assistant 回答及结束符，不能含 user prompt。
+if os.environ.get("TRAIN", "0") == "1":
+    trainer.train()
+    trainer.save_model("outputs/code-sft/adapter")
+    tok.save_pretrained("outputs/code-sft/adapter")</code></pre>
+<p>先 python sft_train.py 查看监督文本，不训练；确认无误后 TRAIN=1 python sft_train.py。排错时先将 train 限为 16 条、max_steps=10；正式训练移除 max_steps，以 1 epoch 起步。dev 仍改善时可从相同初始基座重新做 2–3 epoch 对照；不要混淆“接着训练”与“独立实验”。</p>
+<p><b>W6 日程：</b>第 1 天 label 与短程排错；第 2 天一轮正式 SFT；第 3 天 dev 分析与最多一次主要参数调整；第 4 天重载和原模型/few-shot/SFT 对照；第 5 天固定 test 最终评测。loss 仅用于训练诊断，任务通过率决定是否有效。训练时右 padding，批量自回归生成时改为左 padding。</p>
+<h2>14.3 保存、恢复与升级模型</h2>
+<p>重载顺序：按记录的 MODEL_REV 加载同一个 Coder 基座（与基线同样的 4-bit 配置）→ PeftModel.from_pretrained(base, "outputs/code-sft/adapter") → tokenizer 从 adapter 目录加载 → model.eval() → 开启 use_cache。用固定 prompt 与 greedy 解码核对重载前后 token 输出。adapter 不包含完整基座；恢复训练还需要中间 checkpoint 的 optimizer/scheduler 状态。</p>
+<p>1.5B 实验闭环后，才选 Qwen/Qwen2.5-Coder-3B-Instruct 或 7B-Instruct 做 QLoRA。新基座需要重新训练 adapter，不能直接复用 1.5B adapter；保持数据与评测预算，记录 7B 更慢、更占显存的实际代价。不承诺固定 14–16GB 峰值。</p>
+<h1>15. W7 操作手册：答案奖励与最小 GRPO</h1>
+<h2>15.1 数据、格式与奖励先行</h2>
+<p>模型固定为 Qwen/Qwen2.5-1.5B-Instruct，使用已有对话模板以降低入门复杂度。Qwen2.5-Math-1.5B 可作进阶对照，但 base 模型需另行设计输入格式；不在第一次实验同时更换模型与训练算法。GSM8K 是英文，先读懂十道题和答案解析；实验主要控制模型训练变量，不额外混入翻译误差。</p>
+<ol>
+<li><b>第 1 天：</b>用 100–200 道人工可核对的整数算术检查输出与 verifier。任务不要求 think 标签，只要求最终一行 Answer: 数字。中间可简短解释。</li>
+<li><b>第 2 天：</b>固定 GSM8K 训练集 shuffle seed=42，前 1000 题训练、之后 200 题 dev；其余保留。test 独立预选 200 题，训练和调参时不读取结果。</li>
+<li><b>第 3 天：</b>先对 dev 的固定 50 题每题采样 4 次，看正确率、格式率、组内方差。全错先降难度，全对先加难度；dev 题不能搬入 train。</li>
+<li><b>第 4 天：</b>20 optimizer steps 做链路验收，通过后再从原基座独立做 100 steps 的预算实验；之后是否扩到 300 steps 由 dev 结果和实测时间决定。</li>
+<li><b>第 5 天：</b>原模型与训练后模型用同一 greedy、max_new_tokens=256 的独立测试；如果改成 512，所有对照都重新按 512 评估。记录截断率，不把截断错误归为纯数学能力不足。</li>
+</ol>
+<pre lang="python" caption="math_reward.py：只接受规定数字格式；可在 CPU 独立检查"><code>import re
+from decimal import Decimal
+
+NUMBER = re.compile(r"[+-]?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?")
+
+def number(text):
+    s = text.strip()
+    return Decimal(s.replace(",", "")) if NUMBER.fullmatch(s) else None
+
+def final_answer(text):
+    lines = text.strip().splitlines()
+    if not lines or not lines[-1].startswith("Answer:"):
+        return None
+    if sum(line.startswith("Answer:") for line in lines) != 1:
+        return None
+    return number(lines[-1].split(":", 1)[1])
+
+def correctness_reward(completions, answer, **kwargs):
+    if len(completions) != len(answer):
+        raise ValueError("候选与答案数量不一致")
+    result = []
+    for completion, target in zip(completions, answer):
+        text = (completion[0]["content"] if isinstance(completion, list)
+                else completion)
+        predicted, expected = final_answer(text), number(target)
+        result.append(float(predicted is not None and expected is not None
+                            and predicted == expected))
+    return result
+
+if __name__ == "__main__":
+    assert final_answer("Explanation.\nAnswer: 72.0") == number("72")
+    assert final_answer("Answer: 1,200") == number("1200")
+    assert final_answer("Answer: -3") == number("-3")
+    for bad in ["72", "Answer: 1,2", "Answer: NaN", "Answer: 1/2",
+                "Answer: 1\nAnswer: 2", "Answer: 2\nmore text"]:
+        assert final_answer(bad) is None
+    assert correctness_reward(["Answer: 72", "Answer: 71"], ["72", "72"]) == [1.0, 0.0]
+    print("verifier examples OK")</code></pre>
+<p>此 verifier 接受整数/有限小数，不处理分数、单位、科学记数或通用符号数学；先保证所有目标属于支持范围。格式错误判零，同时单独统计答案格式率，避免把格式学习全当成数学能力提升。无需 eval、exec 或模型自评。</p>
+<h2>15.2 最小训练入口</h2>
+<p>保存 math_reward.py 后再运行下例 grpo_train.py；使用第 11 节 agi-post 环境，先 python math_reward.py。GRPOConfig 参数与批次规则已对照 TRL v0.17.0 文档及源码；该版本默认 loss_type 是 bnpo，这里显式选 grpo 便于对应原始公式。</p>
+<pre lang="python" caption="grpo_train.py：bf16 + LoRA + Transformers rollout，不依赖 vLLM"><code>import os
+import torch
+from datasets import load_dataset
+from transformers import AutoTokenizer
+from peft import LoraConfig
+from trl import GRPOConfig, GRPOTrainer
+from math_reward import number, correctness_reward
+
+MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
+REV = os.environ.get("MODEL_REV", "main")
+tok = AutoTokenizer.from_pretrained(MODEL, revision=REV)
+tok.padding_side = "left"
+if tok.pad_token_id is None:
+    tok.pad_token = tok.eos_token
+raw = load_dataset("openai/gsm8k", "main", split="train").shuffle(seed=42)
+train_raw, dev_raw = raw.select(range(1000)), raw.select(range(1000, 1200))
+
+def convert(row):
+    _, sep, answer = row["answer"].rpartition("####")
+    assert sep and number(answer) is not None, "目标答案格式不支持"
+    return {
+        "prompt": [
+            {"role": "system", "content": (
+                "Solve the problem. You may explain briefly. "
+                "End with exactly one line: Answer: &lt;number&gt;")},
+            {"role": "user", "content": row["question"]}],
+        "answer": answer.strip()}
+
+train = train_raw.map(convert, remove_columns=train_raw.column_names)
+dev = dev_raw.map(convert, remove_columns=dev_raw.column_names)
+for rows in (train, dev):
+    lengths = [len(tok.apply_chat_template(p, tokenize=True,
+                  add_generation_prompt=True)) for p in rows["prompt"]]
+    assert max(lengths) &lt;= 512, "prompt 超限，统一调整上限后再跑"
+
+peft = LoraConfig(r=8, lora_alpha=16, lora_dropout=0.0,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    task_type="CAUSAL_LM", bias="none")
+args = GRPOConfig(
+    output_dir="outputs/math-grpo",
+    model_init_kwargs={"revision": REV, "torch_dtype": torch.bfloat16,
+                       "attn_implementation": "sdpa"},
+    per_device_train_batch_size=1, gradient_accumulation_steps=4,
+    num_generations=4, max_prompt_length=512, max_completion_length=256,
+    learning_rate=5e-6, max_steps=20, warmup_steps=2,
+    bf16=True, gradient_checkpointing=True,
+    gradient_checkpointing_kwargs={"use_reentrant": False},
+    use_vllm=False, beta=0.04, loss_type="grpo",
+    scale_rewards=True, num_iterations=1,
+    temperature=0.8, top_p=0.95,
+    eval_strategy="no", logging_steps=1,
+    save_steps=20, save_total_limit=2,
+    report_to="wandb", seed=42, data_seed=42)
+trainer = GRPOTrainer(
+    model=MODEL, args=args, processing_class=tok,
+    train_dataset=train, reward_funcs=correctness_reward, peft_config=peft)
+if os.environ.get("TRAIN", "0") == "1":
+    trainer.train()
+    trainer.save_model("outputs/math-grpo/adapter")
+    tok.save_pretrained("outputs/math-grpo/adapter")</code></pre>
+<p>运行顺序：python grpo_train.py 检查构造 → TRAIN=1 python grpo_train.py 执行 20 步 → 重载后独立生成评测。脚本不自动执行 dev/test 评测；用同一 convert、final_answer、固定模型加载与解码流程单独评测，每题保存原始 completion 和判分。</p>
+<p><b>为什么 batch=1、累积=4、G=4：</b>在 TRL 0.17.0，effective_batch=1×4×1=4，可被 G=4 整除；一组题的四个候选一起生成，再分片计算梯度。20 步只是一条链路检查，并不代表用完 1000 道题。开启内置 eval 时还需 eval_batch×进程数能被 G 整除，本例用独立评测避免混淆。不要把这条规则外推到所有 TRL 版本。</p>
+<p>第一轮 bf16 基座约 3GB 只是权重部分，不是总显存；PEFT 仅训练少量矩阵。OOM 时先判断生成还是反向峰值，降低长度/生成组并重新满足约束。loss 非有限、所有标签/奖励无效、长期全组同分时停止扩大预算。若 rollout 确为瓶颈，另建支持单卡同驻留的新版 TRL/vLLM 或 Unsloth 环境，重跑完全相同基线后再比较；本例不直接打开 vLLM。</p>
+<h1>16. W8 操作手册：可信评测驱动的 Agent</h1>
+<h2>16.1 先定义接口和成功条件</h2>
+<p>模型：Qwen2.5-Coder-1.5B-Instruct 原模型及 W6 adapter；任务：固定 MBPP 留出修复题与自编函数题。每个任务包含 prompt、buggy_code、public_tests、hidden_tests、函数签名和 timeout。保留 20 道 dev 任务调试，test 约 50 道固定题结题；两者来源 task_id 不交叉。</p>
+<p>模型输出纯 Python 代码，最长 512 新 token。执行服务返回结构化 status（passed_public / failed_public / timeout / infra_error）、受控错误摘要、时长；工具异常不伪装成代码逻辑失败。最终 hidden_tests 评分由外部 harness 完成，不给模型看测试源码或答案，也不允许模型改测试。</p>
+<pre lang="python" caption="闭环骨架：generate、run_public、judge_hidden 需接入模型与隔离评测服务"><code>def repair_task(task, generate, run_public, judge_hidden, max_attempts=3):
+    messages = [
+        {"role": "system", "content": "Fix the function. Return only Python code."},
+        {"role": "user", "content": task["prompt"]}]
+    trace, candidate = [], None
+    for attempt in range(max_attempts):
+        candidate = generate(messages, max_new_tokens=512)
+        observation = run_public(candidate, task["public_tests"])
+        trace.append({"attempt": attempt + 1, "code": candidate,
+                      "observation": observation})
+        if observation["status"] == "infra_error":
+            return {"status": "infra_error", "trace": trace}
+        if observation["status"] == "passed_public":
+            break
+        messages.extend([
+            {"role": "assistant", "content": candidate},
+            {"role": "user", "content": observation["summary"][:2000]}])
+    # 隐藏评分只在提交最终候选后执行，不作为继续重试的反馈。
+    final = judge_hidden(candidate, task["hidden_tests"])
+    return {"status": final["status"], "trace": trace}</code></pre>
+<p><b>Docker 生命周期：</b>可信执行服务给每个任务生成容器名；docker create 设置 network=none、read-only、cap-drop=ALL、no-new-privileges、pids-limit=64、memory=512m、cpus=1、user=65534:65534；只挂载专用临时目录，先确保目录和文件对该用户可读。start/attach 设墙钟超时，stdout/stderr 必须流式限长；finally 中对该容器 docker rm -f，并检查清理结果。预拉取并固定 Python 镜像 digest，测试阶段不临时联网装依赖。</p>
+<p>固定测试文件只读可以防改写，但不能让同容器里的代码无法读取它们。若需要防对抗作弊，隐藏输入和评分应由外部 harness 持有，经受控接口逐例调用候选程序；不将所有测试与候选拼接后当作强隔离。第一轮使用受控教学任务，也要验证普通输出、结果错误、无限循环、巨量输出、网络请求和清理失败这六类情况。</p>
+<h2>16.2 五天操作与对照</h2>
+<ol>
+<li>第 1 天：用人工正确/错误代码验证执行服务与可信测试；确认 GPU 容器平台的隔离执行方案可用。</li>
+<li>第 2 天：接通原模型单次生成，记录原始输出、解析失败与公开测试结果；定义唯一的代码解析规则。</li>
+<li>第 3 天：接上 SFT adapter 与最多 3 次反馈修复；上下文超限时保留原题、最新完整候选和最近错误，所有组采用同一裁剪规则。</li>
+<li>第 4 天：在 dev 上检查四组：A 原模型一次；B SFT 一次；C SFT 至多 3 次独立采样；D SFT 至多 3 次带反馈。C/D 都只依据公开测试停止，最后一个/首个公开通过候选按预定规则提交一次隐藏评分。不能让 C/D 偷看隐藏结果来挑答案。</li>
+<li>第 5 天：冻结代码后在 test 运行。C/D 固定相同 temperature=0.7、top_p=0.95、每次 512/累计 1536 输出 token 上限及最多 3 次调用。反馈组通常输入更长，因此另报总输入 token、总输出 token 和墙钟时间；相同调用上限不等于完全相同计算成本。</li>
+</ol>
+<p>报告：通过数/总数、首次通过率、最终候选隐藏通过率、平均调用数、输入/输出 token、平均延迟、超时与基础设施错误率，基础设施错误单独列出。不要把“多候选中某个隐藏通过”的 oracle pass@3 混同真实 Agent 最终提交成功率。</p>
+<p><b>self-judge 第一轮选做：</b>增加 E 组“同样最多 3 次调用，其中一次用于模型自评再修复”，判断收益是否超过独立重试；自评不直接设置任务为成功，最终仍由隐藏测试判定。长程多文件任务与参数更新留到第 17 节。</p>
+<h1>17. 对齐 2026 课程的进阶实验与结题清单</h1>
+<h2>17.1 W9–W10：约 0.1B、Triton 与数据规模实验</h2>
+<p><b>0.1B 级别配置：</b>同一 MiniGPT，vocab=8192、width=768、heads=12、layers=12、context=512、weight tying，约 91.7M 参数；如果需要超过 100M 可增至 14 层，约 105.9M。先 batch=1/2 配合梯度累积和 SDPA；显存是否足够须实际测量。先 1M token 排错，再按 50M–100M token 预算研究，明确这远不足以保证充分预训练。</p>
+<p><b>Triton 顺序：</b>按 <a href="https://triton-lang.org/main/getting-started/tutorials/index.html">官方教程</a>先向量加法，再 softmax，再 fused attention；每步做误差对照，再测速度。测 T=128/512/1024，相同 B/H/D、dtype、mask，先热身，再用 CUDA event 并同步计时；单独报告前向和前反向、峰值显存。不会写 backward 时只报告前向实验，不声称完成训练内核。多卡 NCCL 测试需要真实多卡资源，当前单卡跳过实测。</p>
+<p><b>数据进阶：</b>可选 HuggingFaceFW/fineweb-edu 的 sample-10BT 配置，仅 streaming 固定取约 10,000 条 text，不下载整个 10BT。它已清洗筛选，适合练习自定义过滤与 near-duplicate 检查，不等于原始 Common Crawl dump。真正 raw dump 的 WARC 解析、HTML 正文提取与来源审计是独立扩展，第一轮不强加。</p>
+<p><b>局部 scaling：</b>固定 8k tokenizer，选约 3M（C=192,L=3,H=3）、14M（384,6,6）、约 42M（512,12,8）三种模型；分别跑 5M/10M/20M token，得到 9 个数据点。先估算总 GPU 时长；预算不足只比较 3 个同 token 预算模型并明确不能同时辨识模型与数据缩放。用 log 尺度作图、保存残差；不能凭少量点可靠外推前沿算力或把拟合曲线称为普适 scaling law。</p>
+<h2>17.2 W11–W12：真正的同基座 SFT / DPO / RLVR 对照</h2>
+<p>统一选 Qwen/Qwen2.5-1.5B-Instruct 的同一 revision，以它为共同起点 M0；这项实验放在数学任务上，不用 Coder 的 SFT 结果与数学 RL 结果相比较。所有分支从 M0 独立加载，不能做 M0 → SFT → DPO → GRPO 后宣称是平行对照。</p>
+<ol>
+<li>沿用 W7 的 1000 train / 200 dev 与封存 test，并复核近重复。每个 train 问题保存规范 prompt 和正确数字答案。</li>
+<li>SFT 分支：从 GSM8K 原始 answer 中取步骤解释，末尾替换为统一 Answer: 数字。用 W6 的 completion-only 训练方式，目标模型改为数学 M0；r=8、仅 q/k/v/o，与其他分支对齐。</li>
+<li>DPO 分支：对同一训练问题从 M0 采样至多 8 个回答，用 verifier 找一对正确/错误回答。只保留能形成偏好对的题，记录保留率；没有正确候选时不要偷偷混入老师答案。如果另做“教师答案作 chosen”实验，单独命名并披露额外监督。</li>
+<li>偏好数据格式：prompt 为对话列表，chosen 和 rejected 各为一个 assistant 消息列表；不把完整 prompt 重复进回答。用 TRL 0.17.0 DPOTrainer / DPOConfig，beta=0.1、max_length=768、max_prompt_length=512、microbatch=1、accum=8、LoRA r=8、lr=5e-6，先 20 步排错。reference 固定为 M0；使用 PEFT 隐式 reference 时核对关闭 adapter 后确为 M0。</li>
+<li>GRPO 分支：从 M0 出发，按第 15 节设置奖励，训练题统一为三支共享的可用问题集合；同一 tokenizer、prompt、输出上限、reference 定义。</li>
+<li>比较方式：给每支相同的墙钟预算上限（例如先各 1 GPU 小时），并报告实际训练 token、更新次数、DPO 数据生成耗时、RL rollout 耗时和监督来源。SFT 有老师步骤、DPO 有偏好、RL 有答案，监督信息并不相同，不能据结果宣称算法普遍优劣。</li>
+</ol>
+<p>最终输出 M0/SFT/DPO/GRPO 四列：固定题 greedy 正确率、格式率、截断率、长度、训练和预处理成本、10 个失败例。预算允许时重复 seed；若三支都没有提升，结论可以是当前数据与预算下未观察到优势，而不是强行“调到涨分”。</p>
+<h2>17.3 W13–W16 选做：长程任务、self-judge 与轨迹训练</h2>
+<p>将单函数修复扩为 2–3 个文件的小项目（例如 CSV 单位换算、输入校验与汇总报表），每题约 5–10 个工具动作，先做 20 道开发题和 20 道来源不同的留出题。仍沿用代码 Coder 模型。环境返回文件内容、运行结果与测试状态，限制文件访问范围和总调用预算。</p>
+<p>self-judge 对照：有/无模型自评，在同一调用上限内比较外部测试通过率、自评误判率与额外输入输出 token。轨迹学习：只从 train 任务采集成功与失败后修正轨迹，验证答案后做轨迹 SFT；从同一代码起点独立训练，并在未见任务上比较。只有执行了这一步，才称为“轨迹驱动的参数更新”。完整长程 RL 涉及信用分配和昂贵 rollout，可继续作为第二轮专题。</p>
+<h2>17.4 每周交付与停止条件</h2>
+<table><thead><tr><th><p>阶段</p></th><th><p>必须留下</p></th><th><p>未满足则暂停升级</p></th></tr></thead><tbody>
+<tr><td><p>W1–2</p></td><td><p>梯度核验、Bigram/MLP dev 对照、独立实现笔记</p></td><td><p>无法解释 loss/梯度或数据形状。</p></td></tr>
+<tr><td><p>W3–4</p></td><td><p>tokenizer、数据 hash、GPT checkpoint、受控消融</p></td><td><p>小批不能过拟合、mask 不正确、重载不一致。</p></td></tr>
+<tr><td><p>W5–6</p></td><td><p>任务 manifest、监督文本检查、adapter、基线与 SFT 判分</p></td><td><p>参考答案不能通过可信测试、测试泄漏、全部 labels 被遮蔽。</p></td></tr>
+<tr><td><p>W7</p></td><td><p>verifier 样例、基线、rollout 样本、更新与重载证据</p></td><td><p>奖励解析错误、长期零优势、非有限 loss。</p></td></tr>
+<tr><td><p>W8</p></td><td><p>任务轨迹、隔离执行与清理记录、四组预算/结果表</p></td><td><p>退出码被当成功、隐藏测试进入反馈、容器不能清理。</p></td></tr>
+</tbody></table>
+<p>结题报告模板：研究问题 → 为什么选这个模型和数据 → 算法公式与关键代码对应 → 版本与预算 → 基线和对照 → 失败案例 → 局限 → 下一步。每周只追一个主要问题，AI 可以协助查错，但你应能脱离提示补写一个核心函数并解释它。</p>
