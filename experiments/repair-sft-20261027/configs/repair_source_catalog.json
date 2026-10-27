@@ -1,0 +1,1947 @@
+[
+  {
+    "source_task_id": "authored-v1-stable_unique",
+    "family": "stable_unique",
+    "split": "train",
+    "requirement": "Return distinct integers in their first-occurrence order. Do not modify items.",
+    "signature": "def stable_unique(items):",
+    "reference": "def stable_unique(items):\n    return list(dict.fromkeys(items))",
+    "bugs": [
+      {
+        "kind": "sorting_loses_order",
+        "code": "def stable_unique(items):\n    return sorted(set(items))"
+      },
+      {
+        "kind": "duplicates_kept",
+        "code": "def stable_unique(items):\n    return list(items)"
+      },
+      {
+        "kind": "last_item_lost",
+        "code": "def stable_unique(items):\n    return list(dict.fromkeys(items[:-1]))"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            3,
+            2
+          ]
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            4
+          ]
+        ],
+        "expected": [
+          4
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -1,
+            0,
+            -1,
+            2
+          ]
+        ],
+        "expected": [
+          -1,
+          0,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            5,
+            4,
+            3
+          ]
+        ],
+        "expected": [
+          5,
+          4,
+          3
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-inclusive_sum",
+    "family": "inclusive_sum",
+    "split": "train",
+    "requirement": "Return the sum of integers from lo through hi inclusive. Return 0 if lo > hi.",
+    "signature": "def inclusive_sum(lo, hi):",
+    "reference": "def inclusive_sum(lo, hi):\n    return sum(range(lo, hi + 1))",
+    "bugs": [
+      {
+        "kind": "upper_excluded",
+        "code": "def inclusive_sum(lo, hi):\n    return sum(range(lo, hi))"
+      },
+      {
+        "kind": "lower_excluded",
+        "code": "def inclusive_sum(lo, hi):\n    return sum(range(lo + 1, hi + 1))"
+      },
+      {
+        "kind": "reversed_bounds",
+        "code": "def inclusive_sum(lo, hi):\n    return sum(range(hi, lo + 1))"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          2,
+          5
+        ],
+        "expected": 14,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          0,
+          0
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4,
+          4
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          5,
+          2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -3,
+          -1
+        ],
+        "expected": -6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -2,
+          2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          1,
+          10
+        ],
+        "expected": 55,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-chunk_list",
+    "family": "chunk_list",
+    "split": "train",
+    "requirement": "Split items into consecutive lists of size k, retaining a shorter final chunk. k is a positive integer.",
+    "signature": "def chunk_list(items, k):",
+    "reference": "def chunk_list(items, k):\n    return [items[i:i + k] for i in range(0, len(items), k)]",
+    "bugs": [
+      {
+        "kind": "tail_dropped",
+        "code": "def chunk_list(items, k):\n    return [items[i:i + k] for i in range(0, len(items) - k + 1, k)]"
+      },
+      {
+        "kind": "stride_one",
+        "code": "def chunk_list(items, k):\n    return [items[i:i + k] for i in range(len(items))]"
+      },
+      {
+        "kind": "slice_short",
+        "code": "def chunk_list(items, k):\n    return [items[i:i + k - 1] for i in range(0, len(items), k)]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          2
+        ],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          3
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1
+          ],
+          5
+        ],
+        "expected": [
+          [
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          1
+        ],
+        "expected": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          2
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          3
+        ],
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-count_vowels",
+    "family": "count_vowels",
+    "split": "train",
+    "requirement": "Count ASCII vowels a,e,i,o,u in text, ignoring case. Other characters are not vowels.",
+    "signature": "def count_vowels(text):",
+    "reference": "def count_vowels(text):\n    return sum(c in 'aeiou' for c in text.lower())",
+    "bugs": [
+      {
+        "kind": "case_sensitive",
+        "code": "def count_vowels(text):\n    return sum(c in 'aeiou' for c in text)"
+      },
+      {
+        "kind": "u_missing",
+        "code": "def count_vowels(text):\n    return sum(c in 'aeio' for c in text.lower())"
+      },
+      {
+        "kind": "distinct_only",
+        "code": "def count_vowels(text):\n    return len(set(text.lower()) & set('aeiou'))"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          "AEiouu"
+        ],
+        "expected": 6,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "rhythm"
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "banana"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "U"
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "é123A!"
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "aAa"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-balanced_parentheses",
+    "family": "balanced_parentheses",
+    "split": "train",
+    "requirement": "Return whether parentheses in text are balanced and correctly ordered. Ignore all non-parenthesis characters.",
+    "signature": "def balanced_parentheses(text):",
+    "reference": "def balanced_parentheses(text):\n    depth = 0\n    for c in text:\n        depth += (c == '(') - (c == ')')\n        if depth < 0:\n            return False\n    return depth == 0",
+    "bugs": [
+      {
+        "kind": "only_counts",
+        "code": "def balanced_parentheses(text):\n    return text.count('(') == text.count(')')"
+      },
+      {
+        "kind": "prefix_not_checked",
+        "code": "def balanced_parentheses(text):\n    depth = 0\n    for c in text:\n        depth += (c == '(') - (c == ')')\n    return depth == 0"
+      },
+      {
+        "kind": "unclosed_and_misordered_accepted",
+        "code": "def balanced_parentheses(text):\n    depth = 0\n    for c in text:\n        depth += (c == '(') - (c == ')')\n    return depth >= 0"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          "a)(b"
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "abc"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "(a(b)c)"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "(()"
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          ")("
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "()()"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "("
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-run_length",
+    "family": "run_length",
+    "split": "train",
+    "requirement": "Encode consecutive equal characters as [character, count] pairs, preserving run order.",
+    "signature": "def run_length(text):",
+    "reference": "def run_length(text):\n    result = []\n    for c in text:\n        if result and result[-1][0] == c:\n            result[-1][1] += 1\n        else:\n            result.append([c, 1])\n    return result",
+    "bugs": [
+      {
+        "kind": "global_counts",
+        "code": "def run_length(text):\n    return [[c, text.count(c)] for c in dict.fromkeys(text)]"
+      },
+      {
+        "kind": "counts_start_zero",
+        "code": "def run_length(text):\n    result = []\n    for c in text:\n        if result and result[-1][0] == c:\n            result[-1][1] += 1\n        else:\n            result.append([c, 0])\n    return result"
+      },
+      {
+        "kind": "last_character_lost",
+        "code": "def run_length(text):\n    result = []\n    for c in text[:-1]:\n        if result and result[-1][0] == c:\n            result[-1][1] += 1\n        else:\n            result.append([c, 1])\n    return result"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          "aaba"
+        ],
+        "expected": [
+          [
+            "a",
+            2
+          ],
+          [
+            "b",
+            1
+          ],
+          [
+            "a",
+            1
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "x"
+        ],
+        "expected": [
+          [
+            "x",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "aaaa"
+        ],
+        "expected": [
+          [
+            "a",
+            4
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ab"
+        ],
+        "expected": [
+          [
+            "a",
+            1
+          ],
+          [
+            "b",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "  !"
+        ],
+        "expected": [
+          [
+            " ",
+            2
+          ],
+          [
+            "!",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-flatten_once",
+    "family": "flatten_once",
+    "split": "train",
+    "requirement": "Flatten a list of lists by exactly one level. Preserve order, duplicates and all elements.",
+    "signature": "def flatten_once(groups):",
+    "reference": "def flatten_once(groups):\n    return [item for group in groups for item in group]",
+    "bugs": [
+      {
+        "kind": "first_group_only",
+        "code": "def flatten_once(groups):\n    return list(groups[0]) if groups else []"
+      },
+      {
+        "kind": "empty_stops_loop",
+        "code": "def flatten_once(groups):\n    result = []\n    for group in groups:\n        if not group:\n            break\n        result.extend(group)\n    return result"
+      },
+      {
+        "kind": "drops_falsy",
+        "code": "def flatten_once(groups):\n    return [item for group in groups for item in group if item]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            [],
+            [
+              0,
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          0,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            []
+          ]
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          1,
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              [
+                1
+              ]
+            ],
+            [
+              null,
+              false
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1
+          ],
+          null,
+          false
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-transpose",
+    "family": "transpose",
+    "split": "train",
+    "requirement": "Transpose a rectangular matrix (list of equal-length rows). Return lists of columns. Empty input or zero columns yields [].",
+    "signature": "def transpose(matrix):",
+    "reference": "def transpose(matrix):\n    return [list(col) for col in zip(*matrix)]",
+    "bugs": [
+      {
+        "kind": "identity",
+        "code": "def transpose(matrix):\n    return [list(row) for row in matrix]"
+      },
+      {
+        "kind": "drops_last_column",
+        "code": "def transpose(matrix):\n    return [list(col) for col in zip(*matrix)][:-1]"
+      },
+      {
+        "kind": "reverse_columns",
+        "code": "def transpose(matrix):\n    return [list(col) for col in zip(*matrix)][::-1]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            6
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [],
+            []
+          ]
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              -1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            0
+          ],
+          [
+            -1
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-merge_intervals",
+    "family": "merge_intervals",
+    "split": "train",
+    "requirement": "Merge closed intervals [start,end], where start <= end. Touching intervals merge. Return intervals sorted by start; do not modify input.",
+    "signature": "def merge_intervals(intervals):",
+    "reference": "def merge_intervals(intervals):\n    merged = []\n    for start, end in sorted(intervals):\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged",
+    "bugs": [
+      {
+        "kind": "touch_not_merged",
+        "code": "def merge_intervals(intervals):\n    merged = []\n    for start, end in sorted(intervals):\n        if merged and start < merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged"
+      },
+      {
+        "kind": "nested_shrinks_end",
+        "code": "def merge_intervals(intervals):\n    merged = []\n    for start, end in sorted(intervals):\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = end\n        else:\n            merged.append([start, end])\n    return merged"
+      },
+      {
+        "kind": "unsorted_input",
+        "code": "def merge_intervals(intervals):\n    merged = []\n    for start, end in intervals:\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              5,
+              7
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            7
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              10
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            10
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              -3,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            -3,
+            4
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-binary_search_first",
+    "family": "binary_search_first",
+    "split": "train",
+    "requirement": "In sorted integer items, return the first index of target, or -1 if absent.",
+    "signature": "def binary_search_first(items, target):",
+    "reference": "def binary_search_first(items, target):\n    lo, hi = 0, len(items)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if items[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid\n    return lo if lo < len(items) and items[lo] == target else -1",
+    "bugs": [
+      {
+        "kind": "last_match",
+        "code": "def binary_search_first(items, target):\n    return len(items) - 1 - items[::-1].index(target) if target in items else -1"
+      },
+      {
+        "kind": "insertion_not_absent",
+        "code": "def binary_search_first(items, target):\n    import bisect\n    return bisect.bisect_left(items, target)",
+        "public_case_index": 2
+      },
+      {
+        "kind": "one_based",
+        "code": "def binary_search_first(items, target):\n    return items.index(target) + 1 if target in items else -1"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            2,
+            4
+          ],
+          2
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          0
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          3
+        ],
+        "expected": -1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          0
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            3
+          ],
+          3
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -2,
+            -2,
+            0
+          ],
+          -2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            3,
+            5
+          ],
+          4
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-rotate_right",
+    "family": "rotate_right",
+    "split": "dev",
+    "requirement": "Rotate items right by k positions. k can be any integer; negative k rotates left. Empty items gives [].",
+    "signature": "def rotate_right(items, k):",
+    "reference": "def rotate_right(items, k):\n    if not items:\n        return []\n    k %= len(items)\n    return items[-k:] + items[:-k]",
+    "bugs": [
+      {
+        "kind": "direction_reversed",
+        "code": "def rotate_right(items, k):\n    if not items:\n        return []\n    k %= len(items)\n    return items[k:] + items[:k]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          1
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          4
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1
+          ],
+          -8
+        ],
+        "expected": [
+          1
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          0
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          4
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          -1
+        ],
+        "expected": [
+          2,
+          3,
+          1
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-anagram",
+    "family": "anagram",
+    "split": "dev",
+    "requirement": "Return whether two strings are anagrams, ignoring whitespace and case. Punctuation remains significant.",
+    "signature": "def anagram(left, right):",
+    "reference": "def anagram(left, right):\n    def normalized(s):\n        return sorted(c for c in s.casefold() if not c.isspace())\n    return normalized(left) == normalized(right)",
+    "bugs": [
+      {
+        "kind": "ignores_multiplicity",
+        "code": "def anagram(left, right):\n    return {c for c in left.casefold() if not c.isspace()} == {c for c in right.casefold() if not c.isspace()}"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          "aab",
+          "abb"
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          "a ab",
+          "ab a"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "",
+          " \t"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "Dormitory",
+          "Dirty room"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "a!",
+          "a"
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ABC",
+          "cba"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ß",
+          "ss"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-gcd",
+    "family": "gcd",
+    "split": "dev",
+    "requirement": "Return the nonnegative greatest common divisor of integer a,b. gcd(0,0) is 0.",
+    "signature": "def gcd(a, b):",
+    "reference": "def gcd(a, b):\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a",
+    "bugs": [
+      {
+        "kind": "sign_not_normalized",
+        "code": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          -12,
+          -8
+        ],
+        "expected": 4,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          0,
+          0
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          0,
+          -7
+        ],
+        "expected": 7,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          13,
+          5
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          18,
+          12
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -9,
+          0
+        ],
+        "expected": 9,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4,
+          4
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-invert_mapping",
+    "family": "invert_mapping",
+    "split": "dev",
+    "requirement": "Invert a dictionary with string keys and string values: map each value to a list of its keys in input insertion order.",
+    "signature": "def invert_mapping(mapping):",
+    "reference": "def invert_mapping(mapping):\n    result = {}\n    for key, value in mapping.items():\n        result.setdefault(value, []).append(key)\n    return result",
+    "bugs": [
+      {
+        "kind": "duplicate_values_overwrite",
+        "code": "def invert_mapping(mapping):\n    return {value: [key] for key, value in mapping.items()}"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          {
+            "a": "x",
+            "b": "x",
+            "c": "y"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a",
+            "b"
+          ],
+          "y": [
+            "c"
+          ]
+        },
+        "visibility": "public"
+      },
+      {
+        "args": [
+          {}
+        ],
+        "expected": {},
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "x"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "z": "",
+            "a": ""
+          }
+        ],
+        "expected": {
+          "": [
+            "z",
+            "a"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "b",
+            "b": "a"
+          }
+        ],
+        "expected": {
+          "b": [
+            "a"
+          ],
+          "a": [
+            "b"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "x",
+            "b": "y",
+            "c": "x"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a",
+            "c"
+          ],
+          "y": [
+            "b"
+          ]
+        },
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-matrix_diagonal",
+    "family": "matrix_diagonal",
+    "split": "dev",
+    "requirement": "Return the sum of the main and anti-diagonals of a square integer matrix, counting the center once. Empty matrix gives 0.",
+    "signature": "def matrix_diagonal(matrix):",
+    "reference": "def matrix_diagonal(matrix):\n    n = len(matrix)\n    total = sum(matrix[i][i] + matrix[i][n - 1 - i] for i in range(n))\n    if n % 2:\n        total -= matrix[n // 2][n // 2]\n    return total",
+    "bugs": [
+      {
+        "kind": "center_twice",
+        "code": "def matrix_diagonal(matrix):\n    n = len(matrix)\n    return sum(matrix[i][i] + matrix[i][n - 1 - i] for i in range(n))"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9
+            ]
+          ]
+        ],
+        "expected": 25,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              7
+            ]
+          ]
+        ],
+        "expected": 7,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        ],
+        "expected": 10,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              -2,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "expected": -2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": 8,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-longest_common_prefix",
+    "family": "longest_common_prefix",
+    "split": "test",
+    "requirement": "Return the longest prefix common to all strings in words. Empty words gives ''. Case is significant.",
+    "signature": "def longest_common_prefix(words):",
+    "reference": "def longest_common_prefix(words):\n    if not words:\n        return ''\n    prefix = words[0]\n    for word in words[1:]:\n        while not word.startswith(prefix):\n            prefix = prefix[:-1]\n    return prefix",
+    "bugs": [
+      {
+        "kind": "first_word_only",
+        "code": "def longest_common_prefix(words):\n    return words[0] if words else ''"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            "flower",
+            "flow",
+            "flight"
+          ]
+        ],
+        "expected": "fl",
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "abc"
+          ]
+        ],
+        "expected": "abc",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "",
+            "abc"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "dog",
+            "cat"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "ab",
+            "abc",
+            "ab"
+          ]
+        ],
+        "expected": "ab",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "A",
+            "a"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-frequency_winner",
+    "family": "frequency_winner",
+    "split": "test",
+    "requirement": "Return the most frequent integer in items; break ties by smallest integer. Empty items gives None.",
+    "signature": "def frequency_winner(items):",
+    "reference": "def frequency_winner(items):\n    if not items:\n        return None\n    from collections import Counter\n    counts = Counter(items)\n    return min(counts, key=lambda x: (-counts[x], x))",
+    "bugs": [
+      {
+        "kind": "first_tie_wins",
+        "code": "def frequency_winner(items):\n    if not items:\n        return None\n    from collections import Counter\n    return Counter(items).most_common(1)[0][0]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            3,
+            1
+          ]
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": null,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            9
+          ]
+        ],
+        "expected": 9,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -1,
+            -2
+          ]
+        ],
+        "expected": -2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-max_subarray",
+    "family": "max_subarray",
+    "split": "test",
+    "requirement": "Return the largest sum of a nonempty contiguous subarray. Empty items gives 0.",
+    "signature": "def max_subarray(items):",
+    "reference": "def max_subarray(items):\n    if not items:\n        return 0\n    best = current = items[0]\n    for x in items[1:]:\n        current = max(x, current + x)\n        best = max(best, current)\n    return best",
+    "bugs": [
+      {
+        "kind": "empty_subarray_allowed",
+        "code": "def max_subarray(items):\n    best = current = 0\n    for x in items:\n        current = max(0, current + x)\n        best = max(best, current)\n    return best"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          [
+            -5,
+            -2,
+            -7
+          ]
+        ],
+        "expected": -2,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            4
+          ]
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -2,
+            1,
+            -3,
+            4,
+            -1,
+            2,
+            1,
+            -5,
+            4
+          ]
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            -1,
+            0
+          ]
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-is_prime",
+    "family": "is_prime",
+    "split": "test",
+    "requirement": "Return whether integer n is prime. Integers below 2 are not prime.",
+    "signature": "def is_prime(n):",
+    "reference": "def is_prime(n):\n    if n < 2:\n        return False\n    d = 2\n    while d * d <= n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True",
+    "bugs": [
+      {
+        "kind": "square_boundary_excluded",
+        "code": "def is_prime(n):\n    if n < 2:\n        return False\n    d = 2\n    while d * d < n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          49
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          -1
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          0
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          1
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          2
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          3
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          97
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          121
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          15
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  {
+    "source_task_id": "authored-v1-edit_distance",
+    "family": "edit_distance",
+    "split": "test",
+    "requirement": "Return Levenshtein distance between strings a,b; insertion, deletion and substitution each cost 1.",
+    "signature": "def edit_distance(a, b):",
+    "reference": "def edit_distance(a, b):\n    row = list(range(len(b) + 1))\n    for i, x in enumerate(a, 1):\n        new = [i]\n        for j, y in enumerate(b, 1):\n            new.append(min(new[-1] + 1, row[j] + 1, row[j - 1] + (x != y)))\n        row = new\n    return row[-1]",
+    "bugs": [
+      {
+        "kind": "substitution_cost_two",
+        "code": "def edit_distance(a, b):\n    row = list(range(len(b) + 1))\n    for i, x in enumerate(a, 1):\n        new = [i]\n        for j, y in enumerate(b, 1):\n            new.append(min(new[-1] + 1, row[j] + 1, row[j - 1] + 2 * (x != y)))\n        row = new\n    return row[-1]"
+      }
+    ],
+    "cases": [
+      {
+        "args": [
+          "cat",
+          "cut"
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          "",
+          ""
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "abc",
+          ""
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "",
+          "ab"
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "kitten",
+          "sitting"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "same",
+          "same"
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ab",
+          "ba"
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      }
+    ]
+  }
+]

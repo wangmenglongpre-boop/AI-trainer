@@ -1,0 +1,13 @@
+# Interface baseline from learning-plan-v3.xml.
+# Install torch from the cu124 index first, or clone the validated agi-foundation.
+# torch==2.6.0 also accepts the installed local version 2.6.0+cu124.
+torch==2.6.0
+transformers==4.51.3
+trl==0.17.0
+peft==0.15.2
+accelerate==1.6.0
+datasets==3.5.0
+bitsandbytes==0.45.5
+numpy==1.26.4
+tokenizers==0.21.1
+wandb==0.19.11

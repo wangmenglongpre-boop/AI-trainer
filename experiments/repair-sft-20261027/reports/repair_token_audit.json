@@ -1,0 +1,239 @@
+{
+  "summary": {
+    "train": {
+      "samples": 30,
+      "total_tokens": 4671,
+      "supervised_tokens": 1152,
+      "max_tokens": 237
+    },
+    "dev": {
+      "samples": 5,
+      "total_tokens": 816,
+      "supervised_tokens": 207,
+      "max_tokens": 207
+    },
+    "test": {
+      "samples": 5,
+      "total_tokens": 900,
+      "supervised_tokens": 295,
+      "max_tokens": 260
+    }
+  },
+  "rows": {
+    "train": [
+      {
+        "id": "authored-v1-stable_unique-bug1",
+        "tokens": 112,
+        "answer_tokens": 15
+      },
+      {
+        "id": "authored-v1-stable_unique-bug2",
+        "tokens": 114,
+        "answer_tokens": 15
+      },
+      {
+        "id": "authored-v1-stable_unique-bug3",
+        "tokens": 113,
+        "answer_tokens": 15
+      },
+      {
+        "id": "authored-v1-inclusive_sum-bug1",
+        "tokens": 107,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-inclusive_sum-bug2",
+        "tokens": 114,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-inclusive_sum-bug3",
+        "tokens": 111,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-chunk_list-bug1",
+        "tokens": 170,
+        "answer_tokens": 30
+      },
+      {
+        "id": "authored-v1-chunk_list-bug2",
+        "tokens": 174,
+        "answer_tokens": 30
+      },
+      {
+        "id": "authored-v1-chunk_list-bug3",
+        "tokens": 164,
+        "answer_tokens": 30
+      },
+      {
+        "id": "authored-v1-count_vowels-bug1",
+        "tokens": 118,
+        "answer_tokens": 24
+      },
+      {
+        "id": "authored-v1-count_vowels-bug2",
+        "tokens": 119,
+        "answer_tokens": 24
+      },
+      {
+        "id": "authored-v1-count_vowels-bug3",
+        "tokens": 117,
+        "answer_tokens": 24
+      },
+      {
+        "id": "authored-v1-balanced_parentheses-bug1",
+        "tokens": 140,
+        "answer_tokens": 52
+      },
+      {
+        "id": "authored-v1-balanced_parentheses-bug2",
+        "tokens": 162,
+        "answer_tokens": 52
+      },
+      {
+        "id": "authored-v1-balanced_parentheses-bug3",
+        "tokens": 162,
+        "answer_tokens": 52
+      },
+      {
+        "id": "authored-v1-run_length-bug1",
+        "tokens": 168,
+        "answer_tokens": 56
+      },
+      {
+        "id": "authored-v1-run_length-bug2",
+        "tokens": 207,
+        "answer_tokens": 56
+      },
+      {
+        "id": "authored-v1-run_length-bug3",
+        "tokens": 203,
+        "answer_tokens": 56
+      },
+      {
+        "id": "authored-v1-flatten_once-bug1",
+        "tokens": 117,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-flatten_once-bug2",
+        "tokens": 133,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-flatten_once-bug3",
+        "tokens": 126,
+        "answer_tokens": 20
+      },
+      {
+        "id": "authored-v1-transpose-bug1",
+        "tokens": 153,
+        "answer_tokens": 19
+      },
+      {
+        "id": "authored-v1-transpose-bug2",
+        "tokens": 152,
+        "answer_tokens": 19
+      },
+      {
+        "id": "authored-v1-transpose-bug3",
+        "tokens": 158,
+        "answer_tokens": 19
+      },
+      {
+        "id": "authored-v1-merge_intervals-bug1",
+        "tokens": 237,
+        "answer_tokens": 66
+      },
+      {
+        "id": "authored-v1-merge_intervals-bug2",
+        "tokens": 229,
+        "answer_tokens": 66
+      },
+      {
+        "id": "authored-v1-merge_intervals-bug3",
+        "tokens": 229,
+        "answer_tokens": 66
+      },
+      {
+        "id": "authored-v1-binary_search_first-bug1",
+        "tokens": 194,
+        "answer_tokens": 82
+      },
+      {
+        "id": "authored-v1-binary_search_first-bug2",
+        "tokens": 181,
+        "answer_tokens": 82
+      },
+      {
+        "id": "authored-v1-binary_search_first-bug3",
+        "tokens": 187,
+        "answer_tokens": 82
+      }
+    ],
+    "dev": [
+      {
+        "id": "authored-v1-rotate_right-bug1",
+        "tokens": 158,
+        "answer_tokens": 34
+      },
+      {
+        "id": "authored-v1-anagram-bug1",
+        "tokens": 148,
+        "answer_tokens": 40
+      },
+      {
+        "id": "authored-v1-gcd-bug1",
+        "tokens": 136,
+        "answer_tokens": 37
+      },
+      {
+        "id": "authored-v1-invert_mapping-bug1",
+        "tokens": 167,
+        "answer_tokens": 32
+      },
+      {
+        "id": "authored-v1-matrix_diagonal-bug1",
+        "tokens": 207,
+        "answer_tokens": 64
+      }
+    ],
+    "test": [
+      {
+        "id": "authored-v1-longest_common_prefix-bug1",
+        "tokens": 140,
+        "answer_tokens": 48
+      },
+      {
+        "id": "authored-v1-frequency_winner-bug1",
+        "tokens": 155,
+        "answer_tokens": 44
+      },
+      {
+        "id": "authored-v1-max_subarray-bug1",
+        "tokens": 174,
+        "answer_tokens": 56
+      },
+      {
+        "id": "authored-v1-is_prime-bug1",
+        "tokens": 171,
+        "answer_tokens": 54
+      },
+      {
+        "id": "authored-v1-edit_distance-bug1",
+        "tokens": 260,
+        "answer_tokens": 93
+      }
+    ]
+  },
+  "checks": [
+    "artifact SHA256",
+    "source-group and exact prompt separation",
+    "actual offline Qwen chat template",
+    "assistant and end-marker labels",
+    "no truncation at 1024",
+    "held-out prompt exports omit assistant"
+  ],
+  "trainer_batch_verified": false
+}

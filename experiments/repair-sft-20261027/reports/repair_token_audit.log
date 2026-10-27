@@ -1,0 +1,20 @@
+{
+  "train": {
+    "samples": 30,
+    "total_tokens": 4671,
+    "supervised_tokens": 1152,
+    "max_tokens": 237
+  },
+  "dev": {
+    "samples": 5,
+    "total_tokens": 816,
+    "supervised_tokens": 207,
+    "max_tokens": 207
+  },
+  "test": {
+    "samples": 5,
+    "total_tokens": 900,
+    "supervised_tokens": 295,
+    "max_tokens": 260
+  }
+}

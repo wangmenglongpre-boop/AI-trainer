@@ -1,0 +1,22 @@
+{
+  "authored-v1-stable_unique": "train",
+  "authored-v1-inclusive_sum": "train",
+  "authored-v1-chunk_list": "train",
+  "authored-v1-count_vowels": "train",
+  "authored-v1-balanced_parentheses": "train",
+  "authored-v1-run_length": "train",
+  "authored-v1-flatten_once": "train",
+  "authored-v1-transpose": "train",
+  "authored-v1-merge_intervals": "train",
+  "authored-v1-binary_search_first": "train",
+  "authored-v1-rotate_right": "dev",
+  "authored-v1-anagram": "dev",
+  "authored-v1-gcd": "dev",
+  "authored-v1-invert_mapping": "dev",
+  "authored-v1-matrix_diagonal": "dev",
+  "authored-v1-longest_common_prefix": "test",
+  "authored-v1-frequency_winner": "test",
+  "authored-v1-max_subarray": "test",
+  "authored-v1-is_prime": "test",
+  "authored-v1-edit_distance": "test"
+}

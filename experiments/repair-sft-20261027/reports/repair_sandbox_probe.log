@@ -1,0 +1,1 @@
+{"uid": 65534, "readonly": true, "capabilities_dropped": true, "no_new_privs": true, "interfaces": ["lo"]} timeout cleanup passed

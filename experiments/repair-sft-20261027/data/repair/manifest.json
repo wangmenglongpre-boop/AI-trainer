@@ -1,0 +1,30 @@
+{
+  "version": "authored-v1",
+  "provenance": "Original tasks authored in this session; no external dataset.",
+  "license": "CC0-1.0",
+  "base_pretraining_contamination": "unknown",
+  "source_catalog_sha256": "ece1a7a8ef2613d9077d0425c77f7f832dc60e75dc829b1f032af0294df1031b",
+  "image_id": "sha256:b4403f3b7acf5e0700a5dd4e7ab01456d62b557a208a04f8a42d3470d93b5730",
+  "image_repo_digests": [
+    "python@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377"
+  ],
+  "sources": {
+    "train": 10,
+    "dev": 5,
+    "test": 5
+  },
+  "samples": {
+    "train": 30,
+    "dev": 5,
+    "test": 5
+  },
+  "files": {
+    "dev.jsonl": "a6debb03ed21e04da55073af1a6019bce189951cf550b141ac40e0bd3f7f916c",
+    "dev_prompts.jsonl": "e7c7668ed69ad013957c782fa0c3b33f2da5e7dd5031b7f7979a063350fff597",
+    "evaluator_cases.json": "aec9a61aed7060d391d75e4b57fad4e1ec0a5b040bd5da7db58de5a8af2e8df5",
+    "source_partition.json": "4d0e56d21260ce2acdc15d3e23cbfe8e136adf60be6f157f2cb26d98f751c1a1",
+    "test.jsonl": "0d200cf3b3e5ecfc11e955f2a65207f40a34100826bf64ea1947ae9738e00315",
+    "test_prompts.jsonl": "c951ddb73a988af63d1d914a79a90590dfae40100a8f2c5f27bc8debe105c3ba",
+    "train.jsonl": "68e3b1065cf8640e1b6d36dda3c1d3d92e066c7eaf6c11b5a0ab411576a7dfa6"
+  }
+}

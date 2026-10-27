@@ -1,0 +1,1646 @@
+{
+  "authored-v1-stable_unique": {
+    "function": "stable_unique",
+    "cases": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            3,
+            2
+          ]
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            4
+          ]
+        ],
+        "expected": [
+          4
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -1,
+            0,
+            -1,
+            2
+          ]
+        ],
+        "expected": [
+          -1,
+          0,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            5,
+            4,
+            3
+          ]
+        ],
+        "expected": [
+          5,
+          4,
+          3
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-inclusive_sum": {
+    "function": "inclusive_sum",
+    "cases": [
+      {
+        "args": [
+          2,
+          5
+        ],
+        "expected": 14,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          0,
+          0
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4,
+          4
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          5,
+          2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -3,
+          -1
+        ],
+        "expected": -6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -2,
+          2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          1,
+          10
+        ],
+        "expected": 55,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-chunk_list": {
+    "function": "chunk_list",
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          2
+        ],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          3
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1
+          ],
+          5
+        ],
+        "expected": [
+          [
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          1
+        ],
+        "expected": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          2
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          3
+        ],
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-count_vowels": {
+    "function": "count_vowels",
+    "cases": [
+      {
+        "args": [
+          "AEiouu"
+        ],
+        "expected": 6,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "rhythm"
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "banana"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "U"
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "é123A!"
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "aAa"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-balanced_parentheses": {
+    "function": "balanced_parentheses",
+    "cases": [
+      {
+        "args": [
+          "a)(b"
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "abc"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "(a(b)c)"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "(()"
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          ")("
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "()()"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "("
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-run_length": {
+    "function": "run_length",
+    "cases": [
+      {
+        "args": [
+          "aaba"
+        ],
+        "expected": [
+          [
+            "a",
+            2
+          ],
+          [
+            "b",
+            1
+          ],
+          [
+            "a",
+            1
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "x"
+        ],
+        "expected": [
+          [
+            "x",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "aaaa"
+        ],
+        "expected": [
+          [
+            "a",
+            4
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ab"
+        ],
+        "expected": [
+          [
+            "a",
+            1
+          ],
+          [
+            "b",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "  !"
+        ],
+        "expected": [
+          [
+            " ",
+            2
+          ],
+          [
+            "!",
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-flatten_once": {
+    "function": "flatten_once",
+    "cases": [
+      {
+        "args": [
+          [
+            [],
+            [
+              0,
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          0,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            []
+          ]
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          1,
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              [
+                1
+              ]
+            ],
+            [
+              null,
+              false
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1
+          ],
+          null,
+          false
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-transpose": {
+    "function": "transpose",
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            6
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [],
+            []
+          ]
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              -1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            0
+          ],
+          [
+            -1
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-merge_intervals": {
+    "function": "merge_intervals",
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              5,
+              7
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            7
+          ]
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              10
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            10
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              -3,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            -3,
+            4
+          ]
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-binary_search_first": {
+    "function": "binary_search_first",
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            2,
+            4
+          ],
+          2
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          0
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          3
+        ],
+        "expected": -1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          0
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            3
+          ],
+          3
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -2,
+            -2,
+            0
+          ],
+          -2
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            3,
+            5
+          ],
+          4
+        ],
+        "expected": -1,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-rotate_right": {
+    "function": "rotate_right",
+    "cases": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          1
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "public"
+      },
+      {
+        "args": [
+          [],
+          4
+        ],
+        "expected": [],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1
+          ],
+          -8
+        ],
+        "expected": [
+          1
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          0
+        ],
+        "expected": [
+          1,
+          2,
+          3
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          4
+        ],
+        "expected": [
+          3,
+          1,
+          2
+        ],
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          -1
+        ],
+        "expected": [
+          2,
+          3,
+          1
+        ],
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-anagram": {
+    "function": "anagram",
+    "cases": [
+      {
+        "args": [
+          "aab",
+          "abb"
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          "a ab",
+          "ab a"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "",
+          " \t"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "Dormitory",
+          "Dirty room"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "a!",
+          "a"
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ABC",
+          "cba"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ß",
+          "ss"
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-gcd": {
+    "function": "gcd",
+    "cases": [
+      {
+        "args": [
+          -12,
+          -8
+        ],
+        "expected": 4,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          0,
+          0
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          0,
+          -7
+        ],
+        "expected": 7,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          13,
+          5
+        ],
+        "expected": 1,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          18,
+          12
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          -9,
+          0
+        ],
+        "expected": 9,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4,
+          4
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-invert_mapping": {
+    "function": "invert_mapping",
+    "cases": [
+      {
+        "args": [
+          {
+            "a": "x",
+            "b": "x",
+            "c": "y"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a",
+            "b"
+          ],
+          "y": [
+            "c"
+          ]
+        },
+        "visibility": "public"
+      },
+      {
+        "args": [
+          {}
+        ],
+        "expected": {},
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "x"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "z": "",
+            "a": ""
+          }
+        ],
+        "expected": {
+          "": [
+            "z",
+            "a"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "b",
+            "b": "a"
+          }
+        ],
+        "expected": {
+          "b": [
+            "a"
+          ],
+          "a": [
+            "b"
+          ]
+        },
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          {
+            "a": "x",
+            "b": "y",
+            "c": "x"
+          }
+        ],
+        "expected": {
+          "x": [
+            "a",
+            "c"
+          ],
+          "y": [
+            "b"
+          ]
+        },
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-matrix_diagonal": {
+    "function": "matrix_diagonal",
+    "cases": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9
+            ]
+          ]
+        ],
+        "expected": 25,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              7
+            ]
+          ]
+        ],
+        "expected": 7,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        ],
+        "expected": 10,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              -2,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "expected": -2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": 8,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-longest_common_prefix": {
+    "function": "longest_common_prefix",
+    "cases": [
+      {
+        "args": [
+          [
+            "flower",
+            "flow",
+            "flight"
+          ]
+        ],
+        "expected": "fl",
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "abc"
+          ]
+        ],
+        "expected": "abc",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "",
+            "abc"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "dog",
+            "cat"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "ab",
+            "abc",
+            "ab"
+          ]
+        ],
+        "expected": "ab",
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            "A",
+            "a"
+          ]
+        ],
+        "expected": "",
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-frequency_winner": {
+    "function": "frequency_winner",
+    "cases": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            3,
+            1
+          ]
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": null,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            9
+          ]
+        ],
+        "expected": 9,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -1,
+            -2
+          ]
+        ],
+        "expected": -2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-max_subarray": {
+    "function": "max_subarray",
+    "cases": [
+      {
+        "args": [
+          [
+            -5,
+            -2,
+            -7
+          ]
+        ],
+        "expected": -2,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            4
+          ]
+        ],
+        "expected": 4,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            -2,
+            1,
+            -3,
+            4,
+            -1,
+            2,
+            1,
+            -5,
+            4
+          ]
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": 6,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          [
+            0,
+            -1,
+            0
+          ]
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-is_prime": {
+    "function": "is_prime",
+    "cases": [
+      {
+        "args": [
+          49
+        ],
+        "expected": false,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          -1
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          0
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          1
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          2
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          3
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          4
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          97
+        ],
+        "expected": true,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          121
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          15
+        ],
+        "expected": false,
+        "visibility": "hidden"
+      }
+    ]
+  },
+  "authored-v1-edit_distance": {
+    "function": "edit_distance",
+    "cases": [
+      {
+        "args": [
+          "cat",
+          "cut"
+        ],
+        "expected": 1,
+        "visibility": "public"
+      },
+      {
+        "args": [
+          "",
+          ""
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "abc",
+          ""
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "",
+          "ab"
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "kitten",
+          "sitting"
+        ],
+        "expected": 3,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "same",
+          "same"
+        ],
+        "expected": 0,
+        "visibility": "hidden"
+      },
+      {
+        "args": [
+          "ab",
+          "ba"
+        ],
+        "expected": 2,
+        "visibility": "hidden"
+      }
+    ]
+  }
+}

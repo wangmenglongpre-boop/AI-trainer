@@ -1,0 +1,14 @@
+{
+  "image_id": "sha256:b4403f3b7acf5e0700a5dd4e7ab01456d62b557a208a04f8a42d3470d93b5730",
+  "observed": {
+    "uid": 65534,
+    "readonly": true,
+    "capabilities_dropped": true,
+    "no_new_privs": true,
+    "interfaces": [
+      "lo"
+    ]
+  },
+  "timeout_cleanup_passed": true,
+  "note": "Corpus validation harness; adversarial model-output evaluator still requires hardening."
+}
