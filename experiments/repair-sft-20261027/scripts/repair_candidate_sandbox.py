@@ -6,7 +6,7 @@ import uuid
 
 # No expected values are present inside the container. Each child receives one input.
 CHILD = r"""
-import copy, json, resource, sys
+import contextlib, copy, json, resource, sys
 resource.setrlimit(resource.RLIMIT_FSIZE, (32768, 32768))
 resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
 p = json.loads(sys.argv[1])
@@ -14,8 +14,10 @@ args = p['args']
 original = copy.deepcopy(args)
 try:
     scope = {}
-    exec(compile(p['code'], '<candidate>', 'exec'), scope)
-    value = scope[p['function']](*args)
+    # Ordinary debug prints go to bounded stderr, separate from return serialization.
+    with contextlib.redirect_stdout(sys.stderr):
+        exec(compile(p['code'], '<candidate>', 'exec'), scope)
+        value = scope[p['function']](*args)
     result = dict(status='ok', value=value, mutated=args != original)
     output = json.dumps(result, allow_nan=False)
     if len(output.encode()) > 16384:

@@ -36,7 +36,8 @@ python3 scripts/download_repair_base.py --output outputs/qwen2.5-coder-1.5b-base
 ```
 
 如果该目录已经有完整模型和 full_model_manifest.json，脚本只校验，
-不会重复下载。中断可用同一命令继续；最多 4 路请求（可用 --workers 1 降到单路）。
+不会重复下载。中断可用同一命令继续；默认 4 路请求（可用 --workers 1 降到单路，
+或 --workers 8 使用 8 路）。脚本会阻止多个下载进程同时写入同一目录。
 只在看到 `PASS: complete checkpoint and SHA256 verified` 后传输。
 
 ```bash

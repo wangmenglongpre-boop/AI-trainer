@@ -28,7 +28,7 @@ def main():
         assert not case_passed(buggy[0], task["cases"][0]), task["family"]
         references += len(task["cases"])
     adversarial = [
-        ("def f():\n    print('spoof')\n    return 1", [], 1, False),
+        ("def f():\n    import sys\n    sys.__stdout__.write('spoof')\n    return 1", [], 1, False),
         ("def f():\n    raise RuntimeError()", [], 1, False),
         ("def f():\n    while True:\n        pass", [], 1, False),
         ("def f():\n    print('x' * 100000)\n    return 1", [], 1, False),
@@ -38,6 +38,9 @@ def main():
         case = dict(args=args, expected=value)
         actual = run_candidate(code, "f", [case], image)
         assert not case_passed(actual[0], case, no_mutation=mutation), actual
+    debug_case = dict(args=[], expected=1)
+    debug_result = run_candidate("def f():\n    print('debug')\n    return 1", "f", [debug_case], image)
+    assert case_passed(debug_result[0], debug_case)
     print("Docker reference/bug/output/timeout/mutation checks passed", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(ROOT / "outputs/qwen2.5-coder-1.5b-tokenizer",
                                               local_files_only=True)

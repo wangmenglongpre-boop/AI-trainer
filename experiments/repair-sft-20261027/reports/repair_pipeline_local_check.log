@@ -3,17 +3,17 @@ Docker reference/bug/output/timeout/mutation checks passed
 To disable this warning, you can either:
 	- Avoid using `tokenizers` before the fork if possible
 	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
- 80%|████████  | 4/5 [00:00<00:00, 36.87it/s]100%|██████████| 5/5 [00:00<00:00, 30.73it/s]
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.19s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.19s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.19s/it]100%|██████████| 1/1 [00:01<00:00,  1.19s/it]
+ 80%|████████  | 4/5 [00:00<00:00, 39.19it/s]100%|██████████| 5/5 [00:00<00:00, 32.19it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.16s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.16s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.16s/it]100%|██████████| 1/1 [00:01<00:00,  1.17s/it]
 /Users/bytedance/Documents/AI-trainer/outputs/sft-validation-venv/lib/python3.9/site-packages/peft/utils/save_and_load.py:236: UserWarning: Could not find a config file in  - will assume that the vocabulary was not modified.
   warnings.warn(
 /Users/bytedance/Documents/AI-trainer/outputs/sft-validation-venv/lib/python3.9/site-packages/peft/tuners/tuners_utils.py:167: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
   warnings.warn(
 {'loss': 11.9393, 'grad_norm': 0.019359871745109558, 'learning_rate': 0.0001, 'num_tokens': 3415.0, 'mean_token_accuracy': 0.0, 'epoch': 0.53}
-{'train_runtime': 1.1904, 'train_samples_per_second': 13.441, 'train_steps_per_second': 0.84, 'train_loss': 11.93932819366455, 'epoch': 0.53}
+{'train_runtime': 1.165, 'train_samples_per_second': 13.734, 'train_steps_per_second': 0.858, 'train_loss': 11.93932819366455, 'epoch': 0.53}
 trainable params: 1,024 || all params: 2,430,320 || trainable%: 0.0421
-  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 44.86it/s]100%|██████████| 5/5 [00:00<00:00, 44.73it/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:00<00:02,  3.22it/s]                                               10%|█         | 1/10 [00:00<00:02,  3.22it/s] 20%|██        | 2/10 [00:00<00:02,  3.00it/s]                                               20%|██        | 2/10 [00:00<00:02,  3.00it/s] 30%|███       | 3/10 [00:00<00:02,  3.13it/s]                                               30%|███       | 3/10 [00:00<00:02,  3.13it/s] 40%|████      | 4/10 [00:01<00:01,  3.36it/s]                                               40%|████      | 4/10 [00:01<00:01,  3.36it/s] 50%|█████     | 5/10 [00:01<00:01,  3.31it/s]                                               50%|█████     | 5/10 [00:01<00:01,  3.31it/s] 60%|██████    | 6/10 [00:01<00:01,  3.36it/s]                                               60%|██████    | 6/10 [00:01<00:01,  3.36it/s] 70%|███████   | 7/10 [00:02<00:00,  3.13it/s]                                               70%|███████   | 7/10 [00:02<00:00,  3.13it/s] 80%|████████  | 8/10 [00:02<00:00,  3.41it/s]                                               80%|████████  | 8/10 [00:02<00:00,  3.41it/s] 90%|█████████ | 9/10 [00:02<00:00,  3.49it/s]                                               90%|█████████ | 9/10 [00:02<00:00,  3.49it/s]100%|██████████| 10/10 [00:03<00:00,  3.22it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.22it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.22it/s]100%|██████████| 10/10 [00:03<00:00,  3.26it/s]
+  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 32.99it/s]100%|██████████| 5/5 [00:00<00:00, 32.82it/s]
+  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:00<00:03,  2.31it/s]                                               10%|█         | 1/10 [00:00<00:03,  2.31it/s] 20%|██        | 2/10 [00:00<00:03,  2.43it/s]                                               20%|██        | 2/10 [00:00<00:03,  2.43it/s] 30%|███       | 3/10 [00:01<00:02,  2.92it/s]                                               30%|███       | 3/10 [00:01<00:02,  2.92it/s] 40%|████      | 4/10 [00:01<00:01,  3.28it/s]                                               40%|████      | 4/10 [00:01<00:01,  3.28it/s] 50%|█████     | 5/10 [00:01<00:01,  3.31it/s]                                               50%|█████     | 5/10 [00:01<00:01,  3.31it/s] 60%|██████    | 6/10 [00:01<00:01,  3.41it/s]                                               60%|██████    | 6/10 [00:01<00:01,  3.41it/s] 70%|███████   | 7/10 [00:02<00:00,  3.22it/s]                                               70%|███████   | 7/10 [00:02<00:00,  3.22it/s] 80%|████████  | 8/10 [00:02<00:00,  3.53it/s]                                               80%|████████  | 8/10 [00:02<00:00,  3.53it/s] 90%|█████████ | 9/10 [00:02<00:00,  3.59it/s]                                               90%|█████████ | 9/10 [00:02<00:00,  3.59it/s]100%|██████████| 10/10 [00:03<00:00,  3.37it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.37it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.37it/s]100%|██████████| 10/10 [00:03<00:00,  3.24it/s]
 {'loss': 11.9175, 'grad_norm': 0.03520513325929642, 'learning_rate': 0.0001, 'num_tokens': 2035.0, 'mean_token_accuracy': 0.0, 'epoch': 0.27}
 {'loss': 11.9202, 'grad_norm': 0.03636665642261505, 'learning_rate': 0.0001, 'num_tokens': 3415.0, 'mean_token_accuracy': 0.0, 'epoch': 0.53}
 {'loss': 11.9179, 'grad_norm': 0.04679826647043228, 'learning_rate': 0.0001, 'num_tokens': 4502.0, 'mean_token_accuracy': 0.0, 'epoch': 0.8}
@@ -24,8 +24,8 @@ trainable params: 1,024 || all params: 2,430,320 || trainable%: 0.0421
 {'loss': 11.9114, 'grad_norm': 0.03439292684197426, 'learning_rate': 0.0001, 'num_tokens': 10158.0, 'mean_token_accuracy': 0.0, 'epoch': 2.0}
 {'loss': 11.9175, 'grad_norm': 0.04338560625910759, 'learning_rate': 0.0001, 'num_tokens': 11229.0, 'mean_token_accuracy': 0.0, 'epoch': 2.27}
 {'loss': 11.9244, 'grad_norm': 0.04676870256662369, 'learning_rate': 0.0001, 'num_tokens': 12629.0, 'mean_token_accuracy': 0.0, 'epoch': 2.53}
-{'train_runtime': 3.0653, 'train_samples_per_second': 26.099, 'train_steps_per_second': 3.262, 'train_loss': 11.9195125579834, 'epoch': 2.53}
-  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 47.55it/s]100%|██████████| 5/5 [00:00<00:00, 47.45it/s]
+{'train_runtime': 3.088, 'train_samples_per_second': 25.907, 'train_steps_per_second': 3.238, 'train_loss': 11.9195125579834, 'epoch': 2.53}
+  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 49.22it/s]100%|██████████| 5/5 [00:00<00:00, 49.11it/s]
 huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
 To disable this warning, you can either:
 	- Avoid using `tokenizers` before the fork if possible
@@ -38,6 +38,8 @@ To disable this warning, you can either:
     "decoding": "greedy",
     "max_new_tokens": 512,
     "max_prompt_tokens": 1024,
+    "num_beams": 1,
+    "repetition_penalty": 1.0,
     "parsing": "Only raw Python; surrounding whitespace stripped; fences rejected",
     "metric": "all hidden cases passed, numerator/denominator",
     "attention": "full sdpa, sliding window disabled",
@@ -74,7 +76,7 @@ To disable this warning, you can either:
     }
   },
   "steps": 10,
-  "baseline_sha256": "d299f3fc086c17d2c1b531c05725f44df98ebd0ea0813c91a8f33797ff1f893d",
+  "baseline_sha256": "48bba314f98e8b467ddd0e34b776c6457850b53d3de465bbe15b94008e6be8af",
   "lora": {
     "r": 8,
     "alpha": 16,

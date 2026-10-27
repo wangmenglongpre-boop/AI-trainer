@@ -42,7 +42,11 @@ inspect_sft_data.py 可选加载 tokenizer，检查完整模板和 token 前缀�
 
 download_repair_base.py 从官方固定 revision 下载完整 config/tokenizer/safetensors，权重 3087467144 字节，官方 LFS SHA256=c1b9b30e907950516ba3c646bdf570d8084c25a6410a0cdca80cf04b11bc13a8。先在本地下载并校验，用户传输到远端，再 --verify-only 核验全部文件；权重不上 Git。
 
+下载目录使用排他锁，避免两个进程同时拼接权重；分段请求核对 Content-Range，按顺序写入并支持重试续传。只有官方权重 SHA256 与字节数均匹配后才生成完整模型 manifest；校验失败的文件必须重新获取，不能凭文件大小放行。
+
 eval_repair_dev.py 只消费 dev 无答案 prompts，greedy、num_beams=1、repetition_penalty=1.0、max_new_tokens=512，不继承官网采样配置；原模型和 adapter 使用同一解码及纯代码规则。生成代码由 repair_candidate_sandbox.py 在 Docker 子进程执行，每个子进程只得到一份输入；期望值、判分和数据目录不进入容器。固定镜像、禁网/非 root/只读/能力清零，CPU=1、内存/交换=256MiB、pids=32、tmpfs=8MiB；子进程 CPU=2s、墙钟=3s，输出32KiB受限，外部容器超时及清理。基础设施故障单独记录，报告无效，不解释成模型能力失败。
+
+候选函数的普通 print 输出转入受限 stderr，返回值通过独立 stdout JSON 协议传出；调试打印不影响正确返回值的评分。绕过重定向污染 stdout、异常、超时、输出超限和禁止的输入修改均有本地验收。
 
 smoke_repair_sft.py 仅在完整原模型 dev 基线、数据哈希与协议匹配后运行。从原 checkpoint 新建 r=8/alpha=16/dropout=0.05/q,k,v,o LoRA，bf16 SDPA 全注意力，batch=1、累积=8、lr=1e-4 constant、10–20 次更新；train 为训练输入、dev 仅验证 loss、test 不读取。每步检查冻结参数无梯度、LoRA 梯度有限且至少部分非零；检查参数变化、有限 loss 和 adapter 保存重载 logits。保存推理 adapter，不提供完整优化器恢复状态。再次用 eval_repair_dev.py 从新进程评测 adapter dev；正式 SFT 仍需从原 checkpoint 重启。
 
