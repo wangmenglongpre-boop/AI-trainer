@@ -12,6 +12,9 @@
 - [ ] 独立人工复核自编需求和期望输出；扩大来源题及隐藏测试，形成更可靠的效果评测集。
 - [x] 用户执行实际 SFTTrainer train/dev 全量 batch 检查；提示/padding 屏蔽、回答/结束符监督、pad=EOS 压力检查通过，监督 1152/207 token。
 - [x] 提供完整基座官方固定 revision 下载/哈希核验、Docker dev 评测及 10–20 步短程 SFT 脚本和逐步执行指引；实际远端结果待用户执行。
+- [x] 本地完整基座准备完成：3,087,467,144 字节权重通过官方 SHA256 两次校验，338 个 BF16 张量结构有效，参数量 1,543,714,304；尚未在远端评测或训练。
+- [x] 本地 CPU 小型 Qwen 集成验收：10 次 Trainer 更新、LoRA 梯度与冻结基座、adapter 重载，以及 Docker 32 个 dev 参考测试和异常探针通过。
 - [ ] 冻结 prompt/解码/测试，完成原模型及 few-shot dev 基线。
-- [ ] 实现 10–20 步链路验收、正式 LoRA SFT 与 adapter 重载。
+- [ ] 用户在远端完整基座上执行 10–20 步链路验收，记录梯度、参数变化与 adapter 重载结果。
+- [ ] 从原基座重新开始正式 LoRA SFT，用 dev 选择 checkpoint。
 - [ ] 基于 dev 选 checkpoint，冻结后比较 A/B/C test，记录失败与退化。

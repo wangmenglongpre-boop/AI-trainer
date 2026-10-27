@@ -1,5 +1,5 @@
 {
-  "archive_sha256": "be15c4a456e9b0492aa8c9808016a4c7b04811958d43478ea8f0ef4098ce99d8",
+  "archive_sha256": "1b5bd3022bd7ce68c507a7e11892fc95ace14a9e1ed7add25b0d0658edd6d158",
   "files": {
     "scripts/download_repair_base.py": "972b721f6a86bda35a2f57e49d859bd26a9a0fab69715e9ac0038e6bc9633ba0",
     "scripts/repair_model_common.py": "13264f55703c57dcf3d3417c4ecbf9a91af6796632f69d471c632fa7484a88fa",
@@ -11,9 +11,9 @@
     "scripts/inspect_sft_data.py": "c5a207cc6a1db85e4d2471288b097bbbcea362edd846bb5dc994fb7b7b669cea",
     "specs/repair-sft/proposal.md": "854fca0e4164d4dcb59f9b8f87a96eb6e2251d2b4f60cb350084bdd6a76da0e8",
     "specs/repair-sft/design.md": "7ad03391c77ca23753ac05e707f50bbecb19ef7d9ee1812492ca5f1be2ca86f0",
-    "specs/repair-sft/tasks.md": "5de135dbc233c24c4080cabd7957fd47402b7c51d711deca3cf4784bad2aabef",
-    "specs/repair-sft/checklist.md": "64f74c79c2d521049a35769ac32401128a22ab25d37ef6d0423e173bee007144",
-    "reports/repair_baseline_smoke_guide.md": "39a07012d5d40efe0ef84b65aa68cc6fbcc6d3d5cffd4331d3390690915e0abd",
+    "specs/repair-sft/tasks.md": "ca9378ecbe3a440ea1a8b71f998d8d35ecbde1effb1359c7fbce8ec325640fad",
+    "specs/repair-sft/checklist.md": "987bdf1cb830dfae58f32f3e898cc530581f61e71ba7c3966d00661627471fce",
+    "reports/repair_baseline_smoke_guide.md": "0d6ce0518600f9c5a2183ea0734026d1d9beec1b2d1f1e2478ba442853d509c8",
     "reports/sft_batch_labels_user_confirmation.json": "c555a5c7ed50be40ff930d0cbcdab73beaa460de9d4b373fe8c5b70e0c4435d6",
     "reports/repair_pipeline_local_check.json": "1dd750670bc2a429caa236f745322606f8be5a26966dc65735797a5a2d991940",
     "reports/repair_pipeline_local_check.log": "b6183e5543327c45f8571c22f1d35f8b6d82add54dafc39cbda7fd2f35e87d5a",

@@ -1,0 +1,22 @@
+{
+  "verified": true,
+  "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "weight_bytes": 3087467144,
+  "official_weight_sha256": "c1b9b30e907950516ba3c646bdf570d8084c25a6410a0cdca80cf04b11bc13a8",
+  "verification": "Two successful complete SHA256 checks in repair_base_verified_download.log; contiguous BF16 safetensors offsets/shape sizes checked",
+  "stored_parameters": 1543714304,
+  "tensors": 338,
+  "dtype": "BF16",
+  "architecture": {
+    "hidden_size": 1536,
+    "num_hidden_layers": 28,
+    "num_attention_heads": 12,
+    "num_key_value_heads": 2,
+    "vocab_size": 151936
+  },
+  "lora_r8_qkvo_parameters": 2179072,
+  "lora_target_tensors": 112,
+  "remote_dev_evaluated": false,
+  "remote_sft_trained": false
+}

@@ -17,6 +17,8 @@
 基座：Qwen/Qwen2.5-Coder-1.5B-Instruct。
 固定 revision：2e1fd397ee46e1388853d2af2c993145b0f1098a，与已有 tokenizer 一致。
 完整权重文件 model.safetensors 为 3,087,467,144 字节（约 3.09 GB）。
+本地已于 2026-10-27 下载完成，官方 SHA256 两次校验通过；338 个 BF16 张量
+的形状与数据范围检查通过，实际参数量 1,543,714,304。远端 dev/SFT 仍待你执行。
 官方 HF LFS SHA256：
 
 ```text
@@ -34,6 +36,8 @@ c1b9b30e907950516ba3c646bdf570d8084c25a6410a0cdca80cf04b11bc13a8
 cd /Users/bytedance/Documents/AI-trainer
 python3 scripts/download_repair_base.py --output outputs/qwen2.5-coder-1.5b-base
 ```
+
+本次完整目录已准备好，可以直接执行下面的 scp；上述命令用于重新核验或未来重新下载。
 
 如果该目录已经有完整模型和 full_model_manifest.json，脚本只校验，
 不会重复下载。中断可用同一命令继续；默认 4 路请求（可用 --workers 1 降到单路，
@@ -131,6 +135,9 @@ learning rate = 1e-4，constant schedule
 max_length = 1024，packing = False
 max_steps = 10
 ```
+
+该完整模型有 28 层，以上 4 类投影共 112 个矩阵。r=8 时新建 LoRA
+可训练参数为 2,179,072，约 218 万；原模型约 15.44 亿参数保持冻结。
 
 10 次更新不等于只读 10 条样本：
 

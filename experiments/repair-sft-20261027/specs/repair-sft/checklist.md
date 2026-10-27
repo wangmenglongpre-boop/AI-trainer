@@ -8,6 +8,8 @@
 - [x] authored-v1 全部 40 条真实模板无重复 BOS/EOS、未截断（最长 260 <=1024），回答及结束标记监督有效。
 - [x] 用户执行真实 SFTTrainer train/dev 全量检查，只有回答及模板结束标记 labels 有效，padding 正确屏蔽；pad=EOS 检查通过（报告来自用户终端输出）。
 - [x] agi-post 依赖/CUDA/bf16 验收通过，微型随机 Qwen 的 LoRA 更新、冻结基座和 adapter 重载通过（非真实基座 SFT）。
+- [x] 本地隔离环境的 10 步 Trainer 与 Docker 集成验收通过；重载 logits 最大差值为 0，报告明确标记 real_base_gpu_checked=false。
+- [x] 本地完整官方基座的文件 SHA256、权重大小及 safetensors 张量结构校验通过；模型 manifest 随模型目录传输，远端还须执行 --verify-only。
 - [ ] 冻结基座无训练梯度；LoRA 权重有有限梯度且更新。
 - [ ] 保存重载后 logits 一致（eval、同精度、数值容差内）。
 - [ ] 三组使用同一固定评测协议，报告正确任务数/总数。
