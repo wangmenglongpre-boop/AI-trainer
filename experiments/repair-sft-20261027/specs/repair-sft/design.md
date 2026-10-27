@@ -4,7 +4,7 @@
 
 第一轮选 bf16 基座 + LoRA，暂不叠加量化因素；保留学习计划中 QLoRA 作为显存受限时的独立路线。记录模型实际 commit revision、tokenizer、模板及依赖，不仅记录 main。
 
-远端已建立 agi-post（克隆 agi-foundation），接口基线见 configs/requirements-agi-post.txt；完整实际依赖见 reports/requirements-post.txt。bitsandbytes 已安装并可导入，但量化训练尚未验证。微型随机 Qwen 的手动 LoRA 更新/重载已通过；正式 SFTTrainer 数据/训练链路仍待验证。本地 macOS 未安装后训练依赖。
+远端已建立 agi-post（克隆 agi-foundation），接口基线见 configs/requirements-agi-post.txt；完整实际依赖见 reports/requirements-post.txt。bitsandbytes 已安装并可导入，但量化训练尚未验证。微型随机 Qwen 的手动 LoRA 更新/重载已通过；用户已执行真实 SFTTrainer batch labels 验收（见 reports/sft_batch_labels_user_confirmation.json）。本地隔离验证环境用于 CPU 小型模型和 Docker 集成验收，不替代远端 PyTorch 2.6/CUDA 完整基座测试。
 
 目标 tokenizer 固定到 revision 2e1fd397ee46e1388853d2af2c993145b0f1098a。远端 HF 直连失败，采用本地官网获取并上传 models/qwen2.5-coder-1.5b-tokenizer，来源及哈希见 source_manifest.json；只含 tokenizer/config，不含完整基座权重。
 
@@ -18,7 +18,7 @@ LoRA：W_new = W_frozen + (alpha/r) * B @ A；A=[r,in]、B=[out,r]。新建 adap
 
 本轮采用 AI 辅助自编 authored-v1，不引用 MBPP。来源目录 configs/repair_source_catalog.json，固定 train/dev/test=10/5/5 个独立操作家族，展开为 30/5/5 个 bug。期望输出由独立字面量定义而非运行参考答案生成；20 份参考答案通过全部 133 个测试，40 个 bug 都有公开失败见证。检查来源、精确 prompt、规范化 AST；跨集合 AST 相似度 >=0.75 的候选数为 0，结合需求语义检查，未见换名模板跨集合。该方法不能证明无语义近重复或无预训练污染，独立人工复核仍待做。
 
-只允许 train.jsonl 进入 SFT。dev.jsonl 用于验证 loss；test.jsonl 仅用于质量审计与冻结后的评分，推理使用 dev_prompts.jsonl/test_prompts.jsonl（仅 system/user）。evaluator_cases.json 包含公开/隐藏测试，归评测器所有；不要用 *.jsonl 通配加载训练。manifest.json 固定来源和产物哈希，数据内容 CC0-1.0，不改变仓库其他文件许可证。最长 260 token，train 有效监督 1152 token；全量模板/标签与结束符通过，但 Trainer 实际 padding batch 尚未验收。
+只允许 train.jsonl 进入 SFT。dev.jsonl 用于验证 loss；test.jsonl 仅用于质量审计与冻结后的评分，推理使用 dev_prompts.jsonl/test_prompts.jsonl（仅 system/user）。evaluator_cases.json 包含公开/隐藏测试，归评测器所有；不要用 *.jsonl 通配加载训练。manifest.json 固定来源和产物哈希，数据内容 CC0-1.0，不改变仓库其他文件许可证。最长 260 token，train 有效监督 1152 token；全量模板/标签与结束符通过。实际 Trainer batch 已由用户验收：train/dev 监督 1152/207 token，padding 597/41，pad=EOS 压力检查也通过。
 
 本轮 Docker 沙盒固定镜像 ID，禁网、UID=65534、只读根目录、cap-drop ALL、no-new-privileges，CPU=1、内存/交换上限=128MiB、pids=32、tmpfs=8MiB、日志轮转=64KiB、外部执行超时=12s。容器仅接收代码/函数名/输入，期望值与评分在宿主；容器 stdout 连接在该实例无正常输出，改为 create/start/wait/logs，不使用宿主 bind 或候选源码在宿主执行。安全探针验证 UID、只读、能力清零、仅 lo 网络及无限循环超时清理。当前 harness 用于已检查的自编代码；未来任意模型输出的评分需要进一步隔离输出协议与候选进程。
 
@@ -35,6 +35,18 @@ JSONL 单行字段：id、source_task_id、split、messages。messages 固定 sy
 训练仍是 teacher forcing：loss = 有效回答目标位置的负 log 概率之和 / 有效目标 token 数。HF CausalLM 内部 shift logits/labels 一次；不要在送入模型前又错位一次。第一个回答 token 的预测来自它前一位置的 logits。prompt 不作为监督目标，但作为上下文影响回答及参数梯度。
 
 inspect_sft_data.py 可选加载 tokenizer，检查完整模板和 token 前缀一致、长度、监督文本。不静默截断正确答案；训练框架实际 batch 的 labels 仍须复核，不能认为检查器自动配置了 Trainer。
+
+生产链路复用预分词 input_ids + completion_mask（提示=0、回答=1）；SFTConfig completion_only_loss=True、skip_prepare_dataset=True、packing=False；使用 TRL 默认 collator，由其实际生成 labels。配置 label_names=["labels"]，避免 PEFT 包装隐藏 forward 签名导致验证不返回 eval_loss。完整基座 Trainer 在每次构建时重新检查 train dataloader 全量 labels。
+
+## 原模型基线与短程验收执行
+
+download_repair_base.py 从官方固定 revision 下载完整 config/tokenizer/safetensors，权重 3087467144 字节，官方 LFS SHA256=c1b9b30e907950516ba3c646bdf570d8084c25a6410a0cdca80cf04b11bc13a8。先在本地下载并校验，用户传输到远端，再 --verify-only 核验全部文件；权重不上 Git。
+
+eval_repair_dev.py 只消费 dev 无答案 prompts，greedy、num_beams=1、repetition_penalty=1.0、max_new_tokens=512，不继承官网采样配置；原模型和 adapter 使用同一解码及纯代码规则。生成代码由 repair_candidate_sandbox.py 在 Docker 子进程执行，每个子进程只得到一份输入；期望值、判分和数据目录不进入容器。固定镜像、禁网/非 root/只读/能力清零，CPU=1、内存/交换=256MiB、pids=32、tmpfs=8MiB；子进程 CPU=2s、墙钟=3s，输出32KiB受限，外部容器超时及清理。基础设施故障单独记录，报告无效，不解释成模型能力失败。
+
+smoke_repair_sft.py 仅在完整原模型 dev 基线、数据哈希与协议匹配后运行。从原 checkpoint 新建 r=8/alpha=16/dropout=0.05/q,k,v,o LoRA，bf16 SDPA 全注意力，batch=1、累积=8、lr=1e-4 constant、10–20 次更新；train 为训练输入、dev 仅验证 loss、test 不读取。每步检查冻结参数无梯度、LoRA 梯度有限且至少部分非零；检查参数变化、有限 loss 和 adapter 保存重载 logits。保存推理 adapter，不提供完整优化器恢复状态。再次用 eval_repair_dev.py 从新进程评测 adapter dev；正式 SFT 仍需从原 checkpoint 重启。
+
+按用户偏好，本轮代码与模型准备在本地完成，由用户执行远端传输、评测与训练。运行指引和逐步解释见 reports/repair_baseline_smoke_guide.md。本地集成结果见 repair_pipeline_local_check.json，明确记录环境版本及 real_base_gpu_checked=false；不据此勾选真实基座 GPU 验收。
 
 ## 对照与评测
 

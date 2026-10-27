@@ -10,7 +10,8 @@
 - [x] 构造 AI 辅助自编 30 条 train、5 条 dev、5 条 test；20 个独立来源先分组，Docker 验证 133 个参考测试及 40 个公开 bug 失败，检查重复/近重复候选。
 - [x] 正式链路数据的真实离线 Qwen 模板、显式 labels、结束符、长度、产物哈希检查及沙盒安全/超时清理探针通过。
 - [ ] 独立人工复核自编需求和期望输出；扩大来源题及隐藏测试，形成更可靠的效果评测集。
-- [ ] 准备正式数据后复核实际 Trainer batch labels、padding、长度及有效监督 token。
+- [x] 用户执行实际 SFTTrainer train/dev 全量 batch 检查；提示/padding 屏蔽、回答/结束符监督、pad=EOS 压力检查通过，监督 1152/207 token。
+- [x] 提供完整基座官方固定 revision 下载/哈希核验、Docker dev 评测及 10–20 步短程 SFT 脚本和逐步执行指引；实际远端结果待用户执行。
 - [ ] 冻结 prompt/解码/测试，完成原模型及 few-shot dev 基线。
 - [ ] 实现 10–20 步链路验收、正式 LoRA SFT 与 adapter 重载。
 - [ ] 基于 dev 选 checkpoint，冻结后比较 A/B/C test，记录失败与退化。

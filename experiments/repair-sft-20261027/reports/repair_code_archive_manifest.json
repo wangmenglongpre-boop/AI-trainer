@@ -1,0 +1,22 @@
+{
+  "archive_sha256": "2b9eb1a9a958f910c29501df54676321374942b00e5899f53a7ca3ee58ba1408",
+  "files": {
+    "scripts/download_repair_base.py": "122473f00bbe93e87d74ed7e0e5a808b08c83e52de34aac04e6cd4ea10b96a95",
+    "scripts/repair_model_common.py": "13264f55703c57dcf3d3417c4ecbf9a91af6796632f69d471c632fa7484a88fa",
+    "scripts/repair_candidate_sandbox.py": "852d36d3381dc520074d03259fadeb803fc63097e61c2e76e78425de516af0f7",
+    "scripts/eval_repair_dev.py": "13e676e3baeef06ab0f38745b913bbbc895d004c2109f568a7394736cae092cb",
+    "scripts/smoke_repair_sft.py": "7da8bc45f9f025fe8a9176accb4c010f6f54bd05f11e6996f077a9b0633d4abe",
+    "scripts/check_repair_pipeline_local.py": "37cb12709512dbb7c97c072a80d711aa0ce240b5e8d8bc50e3ba959bb10bb034",
+    "scripts/check_sft_batch_labels.py": "de8f50834b4e3985f1f6f2e1d1ac1dd93152e1f9cb001534f73c1d3aaaee812d",
+    "scripts/inspect_sft_data.py": "c5a207cc6a1db85e4d2471288b097bbbcea362edd846bb5dc994fb7b7b669cea",
+    "specs/repair-sft/proposal.md": "854fca0e4164d4dcb59f9b8f87a96eb6e2251d2b4f60cb350084bdd6a76da0e8",
+    "specs/repair-sft/design.md": "f6ca0b43306b9fac38c2febed97fbbcd37e5745640d042146f9c6829c79d90be",
+    "specs/repair-sft/tasks.md": "5de135dbc233c24c4080cabd7957fd47402b7c51d711deca3cf4784bad2aabef",
+    "specs/repair-sft/checklist.md": "64f74c79c2d521049a35769ac32401128a22ab25d37ef6d0423e173bee007144",
+    "reports/repair_baseline_smoke_guide.md": "3446b1dbf7a501d9b82cfdd9baafaeedfc7d2b2c91c377fe1e489667fa635c2a",
+    "reports/sft_batch_labels_user_confirmation.json": "c555a5c7ed50be40ff930d0cbcdab73beaa460de9d4b373fe8c5b70e0c4435d6",
+    "reports/repair_pipeline_local_check.json": "1dd750670bc2a429caa236f745322606f8be5a26966dc65735797a5a2d991940",
+    "reports/repair_pipeline_local_check.log": "93725ef4ebf7e86fad9fd296f5ef326ada112924b4e28eb7ab0963f3008cb8e6",
+    "reports/sft_learning_guide.md": "a322400b4563ad464fdd341e934835aa113386b99305987def22cfab2a6c2305"
+  }
+}

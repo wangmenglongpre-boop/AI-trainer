@@ -62,4 +62,4 @@ loss = (-log P(回答1|提示)
 
 如果原模型在 dev 已接近满分，应提升任务难度或增加边界题，不能以训练 loss 下降宣称有收益；dev 太低也先排查 prompt、解析和评测再扩大训练。train 改善而 dev 不改善，检查过拟合/数据分布；dev loss 下降但测试通过率不涨，检查答案语义、截断和评价一致性。
 
-已完成远端环境、微型随机 Qwen 的手动 LoRA 更新/重载，以及 authored-v1 的 30/5/5 条 train/dev/test 沙盒与真实 tokenizer 检查，详见 repair_data_preparation.md。此自编小数据集用于链路验收，独立人工复核及扩大效果评测集仍待做；真实基座权重、SFTTrainer 实际 batch 验证与正式 GPU SFT 尚未完成。
+已完成远端环境、微型随机 Qwen 的手动 LoRA 更新/重载、authored-v1 的 30/5/5 条沙盒与 tokenizer 检查，以及用户实际执行的 SFTTrainer batch labels/padding 验收。完整基座 → 原模型 dev → 短程 LoRA SFT 的代码与执行解释见 repair_baseline_smoke_guide.md；由用户在远端执行并反馈。此自编小数据集用于链路验收，独立人工复核、扩大效果评测集和真实基座 GPU SFT 仍待做。

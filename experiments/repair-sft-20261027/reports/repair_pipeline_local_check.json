@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "device": "CPU",
+  "model": "tiny random Qwen2; real official tokenizer",
+  "versions": {
+    "torch": "2.8.0",
+    "transformers": "4.51.3",
+    "trl": "0.17.0",
+    "peft": "0.15.2"
+  },
+  "docker_image": "sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377",
+  "dev_reference_cases": 32,
+  "adversarial_checks": 5,
+  "manual_shifted_loss": 11.936365127563477,
+  "eval_loss": 11.932446479797363,
+  "training_loss": 11.93932819366455,
+  "reload_max_logit_difference": 0.0,
+  "smoke_cli_cpu_steps": 10,
+  "real_base_gpu_checked": false
+}

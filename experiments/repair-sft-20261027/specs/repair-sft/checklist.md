@@ -6,7 +6,7 @@
 - [x] Docker UID/只读/禁网/能力清零/no-new-privileges 探针及无限循环超时清理通过，固定镜像身份。
 - [x] 两条教学样例的真实模板/显式 labels 检查通过，回答未截断，监督文本为正确代码及结束标记。
 - [x] authored-v1 全部 40 条真实模板无重复 BOS/EOS、未截断（最长 260 <=1024），回答及结束标记监督有效。
-- [ ] 实际训练 batch 只有回答和结束符 labels 有效，padding 正确屏蔽。
+- [x] 用户执行真实 SFTTrainer train/dev 全量检查，只有回答及模板结束标记 labels 有效，padding 正确屏蔽；pad=EOS 检查通过（报告来自用户终端输出）。
 - [x] agi-post 依赖/CUDA/bf16 验收通过，微型随机 Qwen 的 LoRA 更新、冻结基座和 adapter 重载通过（非真实基座 SFT）。
 - [ ] 冻结基座无训练梯度；LoRA 权重有有限梯度且更新。
 - [ ] 保存重载后 logits 一致（eval、同精度、数值容差内）。

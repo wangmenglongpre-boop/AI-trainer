@@ -1,0 +1,138 @@
+Docker reference/bug/output/timeout/mutation checks passed
+  0%|          | 0/5 [00:00<?, ?it/s]huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+ 80%|████████  | 4/5 [00:00<00:00, 36.87it/s]100%|██████████| 5/5 [00:00<00:00, 30.73it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.19s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.19s/it]                                             100%|██████████| 1/1 [00:01<00:00,  1.19s/it]100%|██████████| 1/1 [00:01<00:00,  1.19s/it]
+/Users/bytedance/Documents/AI-trainer/outputs/sft-validation-venv/lib/python3.9/site-packages/peft/utils/save_and_load.py:236: UserWarning: Could not find a config file in  - will assume that the vocabulary was not modified.
+  warnings.warn(
+/Users/bytedance/Documents/AI-trainer/outputs/sft-validation-venv/lib/python3.9/site-packages/peft/tuners/tuners_utils.py:167: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+{'loss': 11.9393, 'grad_norm': 0.019359871745109558, 'learning_rate': 0.0001, 'num_tokens': 3415.0, 'mean_token_accuracy': 0.0, 'epoch': 0.53}
+{'train_runtime': 1.1904, 'train_samples_per_second': 13.441, 'train_steps_per_second': 0.84, 'train_loss': 11.93932819366455, 'epoch': 0.53}
+trainable params: 1,024 || all params: 2,430,320 || trainable%: 0.0421
+  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 44.86it/s]100%|██████████| 5/5 [00:00<00:00, 44.73it/s]
+  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:00<00:02,  3.22it/s]                                               10%|█         | 1/10 [00:00<00:02,  3.22it/s] 20%|██        | 2/10 [00:00<00:02,  3.00it/s]                                               20%|██        | 2/10 [00:00<00:02,  3.00it/s] 30%|███       | 3/10 [00:00<00:02,  3.13it/s]                                               30%|███       | 3/10 [00:00<00:02,  3.13it/s] 40%|████      | 4/10 [00:01<00:01,  3.36it/s]                                               40%|████      | 4/10 [00:01<00:01,  3.36it/s] 50%|█████     | 5/10 [00:01<00:01,  3.31it/s]                                               50%|█████     | 5/10 [00:01<00:01,  3.31it/s] 60%|██████    | 6/10 [00:01<00:01,  3.36it/s]                                               60%|██████    | 6/10 [00:01<00:01,  3.36it/s] 70%|███████   | 7/10 [00:02<00:00,  3.13it/s]                                               70%|███████   | 7/10 [00:02<00:00,  3.13it/s] 80%|████████  | 8/10 [00:02<00:00,  3.41it/s]                                               80%|████████  | 8/10 [00:02<00:00,  3.41it/s] 90%|█████████ | 9/10 [00:02<00:00,  3.49it/s]                                               90%|█████████ | 9/10 [00:02<00:00,  3.49it/s]100%|██████████| 10/10 [00:03<00:00,  3.22it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.22it/s]                                               100%|██████████| 10/10 [00:03<00:00,  3.22it/s]100%|██████████| 10/10 [00:03<00:00,  3.26it/s]
+{'loss': 11.9175, 'grad_norm': 0.03520513325929642, 'learning_rate': 0.0001, 'num_tokens': 2035.0, 'mean_token_accuracy': 0.0, 'epoch': 0.27}
+{'loss': 11.9202, 'grad_norm': 0.03636665642261505, 'learning_rate': 0.0001, 'num_tokens': 3415.0, 'mean_token_accuracy': 0.0, 'epoch': 0.53}
+{'loss': 11.9179, 'grad_norm': 0.04679826647043228, 'learning_rate': 0.0001, 'num_tokens': 4502.0, 'mean_token_accuracy': 0.0, 'epoch': 0.8}
+{'loss': 11.9216, 'grad_norm': 0.03957819566130638, 'learning_rate': 0.0001, 'num_tokens': 5487.0, 'mean_token_accuracy': 0.0, 'epoch': 1.0}
+{'loss': 11.9219, 'grad_norm': 0.03802131488919258, 'learning_rate': 0.0001, 'num_tokens': 6714.0, 'mean_token_accuracy': 0.0, 'epoch': 1.27}
+{'loss': 11.9249, 'grad_norm': 0.04699834808707237, 'learning_rate': 0.0001, 'num_tokens': 7837.0, 'mean_token_accuracy': 0.0, 'epoch': 1.53}
+{'loss': 11.9178, 'grad_norm': 0.03652818500995636, 'learning_rate': 0.0001, 'num_tokens': 9235.0, 'mean_token_accuracy': 0.0, 'epoch': 1.8}
+{'loss': 11.9114, 'grad_norm': 0.03439292684197426, 'learning_rate': 0.0001, 'num_tokens': 10158.0, 'mean_token_accuracy': 0.0, 'epoch': 2.0}
+{'loss': 11.9175, 'grad_norm': 0.04338560625910759, 'learning_rate': 0.0001, 'num_tokens': 11229.0, 'mean_token_accuracy': 0.0, 'epoch': 2.27}
+{'loss': 11.9244, 'grad_norm': 0.04676870256662369, 'learning_rate': 0.0001, 'num_tokens': 12629.0, 'mean_token_accuracy': 0.0, 'epoch': 2.53}
+{'train_runtime': 3.0653, 'train_samples_per_second': 26.099, 'train_steps_per_second': 3.262, 'train_loss': 11.9195125579834, 'epoch': 2.53}
+  0%|          | 0/5 [00:00<?, ?it/s]100%|██████████| 5/5 [00:00<00:00, 47.55it/s]100%|██████████| 5/5 [00:00<00:00, 47.45it/s]
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+{
+  "protocol": {
+    "base_model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "split": "dev",
+    "decoding": "greedy",
+    "max_new_tokens": 512,
+    "max_prompt_tokens": 1024,
+    "parsing": "Only raw Python; surrounding whitespace stripped; fences rejected",
+    "metric": "all hidden cases passed, numerator/denominator",
+    "attention": "full sdpa, sliding window disabled",
+    "seed": 42
+  },
+  "data_manifest": {
+    "version": "authored-v1",
+    "provenance": "Original tasks authored in this session; no external dataset.",
+    "license": "CC0-1.0",
+    "base_pretraining_contamination": "unknown",
+    "source_catalog_sha256": "ece1a7a8ef2613d9077d0425c77f7f832dc60e75dc829b1f032af0294df1031b",
+    "image_id": "sha256:b4403f3b7acf5e0700a5dd4e7ab01456d62b557a208a04f8a42d3470d93b5730",
+    "image_repo_digests": [
+      "python@sha256:b7a9e5f6a93d6d4a31f129bbd4bdee69efccb6ded0fb230d78aafaf37af98377"
+    ],
+    "sources": {
+      "train": 10,
+      "dev": 5,
+      "test": 5
+    },
+    "samples": {
+      "train": 30,
+      "dev": 5,
+      "test": 5
+    },
+    "files": {
+      "dev.jsonl": "a6debb03ed21e04da55073af1a6019bce189951cf550b141ac40e0bd3f7f916c",
+      "dev_prompts.jsonl": "e7c7668ed69ad013957c782fa0c3b33f2da5e7dd5031b7f7979a063350fff597",
+      "evaluator_cases.json": "aec9a61aed7060d391d75e4b57fad4e1ec0a5b040bd5da7db58de5a8af2e8df5",
+      "source_partition.json": "4d0e56d21260ce2acdc15d3e23cbfe8e136adf60be6f157f2cb26d98f751c1a1",
+      "test.jsonl": "0d200cf3b3e5ecfc11e955f2a65207f40a34100826bf64ea1947ae9738e00315",
+      "test_prompts.jsonl": "c951ddb73a988af63d1d914a79a90590dfae40100a8f2c5f27bc8debe105c3ba",
+      "train.jsonl": "68e3b1065cf8640e1b6d36dda3c1d3d92e066c7eaf6c11b5a0ab411576a7dfa6"
+    }
+  },
+  "steps": 10,
+  "baseline_sha256": "d299f3fc086c17d2c1b531c05725f44df98ebd0ea0813c91a8f33797ff1f893d",
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ]
+  },
+  "loss_before": 11.92497730255127,
+  "loss_after": 11.924687385559082,
+  "training_loss": 11.9195125579834,
+  "changed_lora_tensors": 8,
+  "gradient_checks": [
+    {
+      "step": 1,
+      "max_norm": 0.027141937986016273
+    },
+    {
+      "step": 2,
+      "max_norm": 0.028054676949977875
+    },
+    {
+      "step": 3,
+      "max_norm": 0.03578893840312958
+    },
+    {
+      "step": 4,
+      "max_norm": 0.030492417514324188
+    },
+    {
+      "step": 5,
+      "max_norm": 0.02826393023133278
+    },
+    {
+      "step": 6,
+      "max_norm": 0.034377507865428925
+    },
+    {
+      "step": 7,
+      "max_norm": 0.026221562176942825
+    },
+    {
+      "step": 8,
+      "max_norm": 0.026215270161628723
+    },
+    {
+      "step": 9,
+      "max_norm": 0.03316989913582802
+    },
+    {
+      "step": 10,
+      "max_norm": 0.037857744842767715
+    }
+  ],
+  "reload_max_logit_difference": 0.0,
+  "scope": "Smoke check only; restart from original base for formal SFT"
+}
+PASS: local integration checks; full base/GPU remains user execution

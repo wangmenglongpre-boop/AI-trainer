@@ -1,0 +1,15 @@
+{
+  "source": "User-provided terminal output in this conversation",
+  "passed": true,
+  "model": "tiny random Qwen2, CPU; no forward/training",
+  "normal_padding": {
+    "train": {"samples": 30, "batches": 15, "supervised_tokens": 1152, "padding_tokens": 597},
+    "dev": {"samples": 5, "batches": 3, "supervised_tokens": 207, "padding_tokens": 41}
+  },
+  "pad_equals_eos": {
+    "train": {"samples": 30, "batches": 15, "supervised_tokens": 1152, "padding_tokens": 597},
+    "dev": {"samples": 5, "batches": 3, "supervised_tokens": 207, "padding_tokens": 41}
+  },
+  "attention_backend_execution_verified": false,
+  "remote_report_path": "/root/AItrainer/AI-trainer/experiments/repair-sft-20261027/reports/sft_batch_labels_check.json"
+}
